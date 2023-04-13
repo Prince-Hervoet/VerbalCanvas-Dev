@@ -1,0 +1,27 @@
+{
+  "name": "nodeauth",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Prince-Hervoet/NodeAuth.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Prince-Hervoet/NodeAuth/issues"
+  },
+  "homepage": "https://github.com/Prince-Hervoet/NodeAuth#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "nanoid": "^4.0.2",
+    "qrcode": "^1.5.1",
+    "redis": "^4.6.5"
+  }
+}
