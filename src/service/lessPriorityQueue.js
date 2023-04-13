@@ -1,6 +1,18 @@
-class PriorityQueue {
+export class LessPriorityQueue {
   #content = [];
   #size;
+  #compare;
+
+  constructor(compare) {
+    if (typeof compare !== "function") {
+      throw "queue init error!";
+    }
+    this.#compare = compare;
+  }
+
+  isEmpty = () => {
+    return this.#size === 0;
+  };
 
   add = (data) => {
     this.#content.push(data);
@@ -40,11 +52,14 @@ class PriorityQueue {
     let flag = left;
     while (left < this.#size) {
       min = this.#content[left];
-      if (right < this.#size && min > this.#content[right]) {
+      if (
+        right < this.#size &&
+        this.#compare(min, this.#content[right]) === 1
+      ) {
         min = this.#content[right];
         flag = right;
       }
-      if (this.#content[index] > min) {
+      if (this.#compare(this.#content[index], min) === 1) {
         const temp = this.#content[index];
         this.#content[index] = this.#content[flag];
         this.#content[flag] = temp;
@@ -63,7 +78,7 @@ class PriorityQueue {
     }
     let parent = Math.ceil((index - 1) / 2);
     while (parent > 0) {
-      if (this.#content[index] < this.#content[parent]) {
+      if (this.#compare(this.#content[index], this.#content[parent]) === -1) {
         const temp = this.#content[index];
         this.#content[index] = this.#content[parent];
         this.#content[parent] = temp;

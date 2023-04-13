@@ -1,6 +1,9 @@
 import QRCode from "qrcode";
 import { nanoid } from "nanoid";
 
+const tokenSaltOne = "Y^D;;lJp~+?Uz#2wJep5LE`}?D1Egb8e";
+const tokenSaltTwo = "[dX41o{1u>J,bt7V:=O52x`4afH12/!Q-gM1";
+
 function createQrCode(content) {
   return new Promise((res, rej) => {
     QRCode.toDataURL(content, function (err, url) {
@@ -19,8 +22,6 @@ async function getAuthorizeCode() {
   const base64Str = buff.toString("base64");
   return nanoid() + "_" + base64Str;
 }
-
-function verifyParams(params, rule) {}
 
 const util = {
   createQrCode,
