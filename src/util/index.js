@@ -23,9 +23,22 @@ async function getAuthorizeCode() {
   return nanoid() + "_" + base64Str;
 }
 
+function verifyParams(rule, paramsObj) {
+  if (!Array.isArray(rult) || typeof paramsObj !== "object") {
+    return false;
+  }
+  for (const r of rule) {
+    if (!r in paramsObj || !paramsObj[r]) {
+      return false;
+    }
+  }
+  return true;
+}
+
 const util = {
   createQrCode,
   getAuthorizeCode,
+  verifyParams,
 };
 
 export default util;

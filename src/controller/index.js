@@ -1,4 +1,5 @@
 import util from "../util/index.js";
+import service from "../service/index.js";
 
 // var obj = new WxLogin({
 //     self_redirect:true,
@@ -11,16 +12,21 @@ import util from "../util/index.js";
 //     href: ""
 //     });
 async function getQrCode(req, res) {
-  console.log(req.query);
   if (!req || !req.query) {
     res.send({ code: 4001, msg: "params empty", data: undefined });
     return;
   }
-  const data = await util.createQrCode("123123");
+  const sessionId = await util.getAuthorizeCode();
+  const sessionData = { sessionId };
+  const data = await util.createQrCode(sessionId);
   res.send(data);
 }
 
-async function timeoutUserPitch(req, res) {}
+async function timeoutUserPitch(req, res) {
+  if (!util.verifyParams(["sessionId"], req.query))
+    res.send({ code: 4002, msg: "params error", data: undefined });
+  service.holdUserConnection(req.query.sessionId, res);
+}
 
 const controller = {
   getQrCode,

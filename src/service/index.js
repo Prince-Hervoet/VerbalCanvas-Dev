@@ -2,6 +2,8 @@ import util from "../util/index.js";
 import getRedisClient from "../util/redis.js";
 import { LessPriorityQueue } from "./lessPriorityQueue.js";
 
+const NO_AUTHORIZE = "1";
+
 const queue = new LessPriorityQueue((a, b) => {
   if (a.updateAt > b.updateAt) {
     return 1;
@@ -53,7 +55,7 @@ async function authorize(sessionId, userInfo) {
 
 async function getToken(code, clientId) {}
 
-export function clearQueueAndMap() {
+function clearQueueAndMap() {
   let count = 16;
   const now = new Date().getTime();
   while (!queue.isEmpty() && count > 0) {
@@ -70,3 +72,12 @@ export function clearQueueAndMap() {
     sessionIdToResponse.delete(resPackage.sessionId);
   }
 }
+
+const service = {
+  holdUserConnection,
+  authorize,
+  getToken,
+  clearQueueAndMap,
+};
+
+export default service;
