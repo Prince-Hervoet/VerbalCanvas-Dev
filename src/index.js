@@ -1,6 +1,11 @@
 import express from "express";
 import controller from "./controller/index.js";
+import service from "./service/index.js";
 const app = express();
+
+setInterval(() => {
+  service.clearQueueAndMap();
+}, 5000);
 
 app.get("/getQrCode", controller.getQrCode);
 

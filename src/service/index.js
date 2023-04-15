@@ -39,16 +39,19 @@ async function holdUserConnection(sessionId, res) {
 async function authorize(sessionId, userInfo) {
   const now = new Date().getTime();
   const value = sessionIdToResponse[sessionId];
+  if (!value) {
+    return { code: 4002, msg: "sessionId is unabled", data: undefined };
+  }
   if (now - value.updateAt >= WAITING_TINEOUT) {
     value.response.send({ code: 4006, msg: "time out", data: undefined });
     sessionIdToResponse.delete(sessionId);
-    return;
+    return { code: 4002, msg: "anthorize failed,time out", data: undefined };
   }
   // 检查用户信息
   // 如果可以
   const code = util.getAuthorizeCode();
   const rc = await getRedisClient();
-  rc.set(code, userInfo);
+  rc.set(code, JSON.stringify(userInfo));
   value.response.send({ code: 4000, msg: "authorize success", data: { code } });
   value.isSent = true;
 }
@@ -56,20 +59,18 @@ async function authorize(sessionId, userInfo) {
 async function getToken(code, clientId) {}
 
 function clearQueueAndMap() {
+  console.log("asdfasdfsadf");
   let count = 16;
   const now = new Date().getTime();
   while (!queue.isEmpty() && count > 0) {
     --count;
     const resPackage = queue.peek();
-    if (resPackage.isSent) {
+    if (resPackage.isSent || now - resPackage.updateAt >= WAITING_TINEOUT) {
       queue.poll();
       sessionIdToResponse.delete(resPackage.sessionId);
-      continue;
-    } else if (now - resPackage.updateAt < WAITING_TINEOUT) {
+    } else {
       break;
     }
-    queue.poll();
-    sessionIdToResponse.delete(resPackage.sessionId);
   }
 }
 

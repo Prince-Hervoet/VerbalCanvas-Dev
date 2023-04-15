@@ -12,12 +12,18 @@ import service from "../service/index.js";
 //     href: ""
 //     });
 async function getQrCode(req, res) {
-  if (!req || !req.query) {
+  if (
+    !req ||
+    !req.query ||
+    !util.verifyParams(
+      ["response_type", "client_id", "redirect_uri", "scope"],
+      req.query
+    )
+  ) {
     res.send({ code: 4001, msg: "params empty", data: undefined });
     return;
   }
   const sessionId = await util.getAuthorizeCode();
-  const sessionData = { sessionId };
   const data = await util.createQrCode(sessionId);
   res.send(data);
 }
