@@ -1,16 +1,6 @@
 import util from "../util/index.js";
 import service from "../service/index.js";
 
-// var obj = new WxLogin({
-//     self_redirect:true,
-//     id:"login_container",
-//     appid: "",
-//     scope: "",
-//     redirect_uri: "",
-//      state: "",
-//     style: "",
-//     href: ""
-//     });
 async function getQrCode(req, res) {
   if (
     !req ||
@@ -20,7 +10,7 @@ async function getQrCode(req, res) {
       req.query
     )
   ) {
-    res.send({ code: 4001, msg: "params empty", data: undefined });
+    res.send({ code: 4001, msg: "params deficiency", data: undefined });
     return;
   }
   const sessionId = await util.getAuthorizeCode();
