@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Show</title>
+</head>
+
+<style>
+    .main-container {
+        width: 60%;
+        min-width: 962px;
+        margin: auto;
+    }
+
+
+    .card-container {
+        height: 400px;
+        border: 1px solid #cdcdcd;
+        border-radius: 10px;
+        box-shadow: 2px 1px 2px #cdcdcd;
+        display: flex;
+    }
+
+    .card-left-container {
+        height: 100%;
+        flex-basis: 800px;
+    }
+
+    .card-right-container {
+        height: 100%;
+        flex: 1;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-right-container>button {
+        height: 50px;
+        outline: 0;
+        border: 0;
+        box-shadow: 1px 2px 3px #cdcdcd;
+        background-color: #f8f8f8;
+        margin-bottom: 10px;
+        font-size: 1.2em;
+    }
+
+    .card-right-container>button:hover {
+        background-color: #dddddd;
+        cursor: pointer;
+    }
+
+    .card-right-container>button:active {
+        background-color: #c2c2c2;
+        cursor: pointer;
+    }
+</style>
+
+<body>
+    <div class="main-container">
+        <div class="card-container">
+            <div class="card-left-container">
+                <div>
+                    <canvas id="canvas_one" width="800" height="400"></canvas>
+                </div>
+            </div>
+            <div class="card-right-container">
+                <button id="canvasOne_drawRect">绘制矩形</button>
+                <button id="canvasOne_drawCircle">绘制圆形</button>
+            </div>
+        </div>
+        <div class="card-container">
+            <div class="card-left-container">
+                <div>
+                    <canvas id="canvas_two" width="800" height="400"></canvas>
+                </div>
+            </div>
+            <div class="card-right-container">
+                <button id="canvasTwo_drawRect">绘制矩形</button>
+                <button id="canvasTwo_drawCircle">绘制圆形</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script src="./show.ts" type="module"></script>
+
+</html>
