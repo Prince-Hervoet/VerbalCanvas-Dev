@@ -14,6 +14,7 @@ export abstract class BaseContainer extends VerbalObject {
 
   constructor(fields: Record<string, any> = {}) {
     super(fields);
+    this._initFields(fields);
     this.vObjectType = V_OBJECT_TYPE.CONTAINER;
   }
 

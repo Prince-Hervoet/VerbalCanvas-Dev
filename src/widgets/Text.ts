@@ -1,5 +1,5 @@
 import { Point, isPointInPolygon } from "../common/MathUtils";
-import { setAttrIfExist } from "../common/Utils";
+import { createCanvasDom, hasProperty, setAttrIfExist } from "../common/Utils";
 import { BaseWidget } from "../core/BaseWidget";
 import { IPainter } from "../core/Painter";
 import { VerbalObject } from "../core/VerbalObject";
@@ -17,7 +17,7 @@ export class Text extends BaseWidget {
   }
 
   private updateTextFields() {
-    const tempCanvas = document.getElementById("canvas")! as HTMLCanvasElement;
+    const tempCanvas = createCanvasDom();
     const ctx = tempCanvas.getContext("2d")!;
     VerbalObject.setContextStyle(ctx, this);
     ctx.textBaseline = "top";
@@ -33,20 +33,22 @@ export class Text extends BaseWidget {
     newValue: Record<string, any>,
     oldValue: Record<string, any>
   ): void {
-    if (newValue.hasOwn("text")) {
+    if (hasProperty(newValue, "text") || hasProperty(newValue, "maxWidth"))
       this.updateTextFields();
+    if (hasProperty(newValue, "height")) {
+      this.scaleY = newValue.height / oldValue.height;
+      this.height = oldValue.height;
+    }
+    if (hasProperty(newValue, "width")) {
+      this.scaleX = newValue.width / oldValue.width;
+      this.width = oldValue.width;
     }
   }
 
   protected _render(painter: IPainter): void {
     const ctx = painter.getContext();
     ctx.textBaseline = "top";
-    ctx.fillText(
-      this.text,
-      0,
-      0,
-      this.maxWidth < 0 ? this.width : this.maxWidth
-    );
+    ctx.fillText(this.text, 0, 0);
   }
 
   public isPointInObject(point: Point): boolean {

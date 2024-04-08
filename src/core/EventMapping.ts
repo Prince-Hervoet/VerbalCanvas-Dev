@@ -59,7 +59,6 @@ export function bindEventMapping(verbal: VerbalLayer) {
     const widget = verbal.isPointInOneObject(cacheMousePoint);
     cacheEventObject.veEventName = veEventName;
     cacheEventObject.hostMouseEvent = hostMouseEvent;
-    cacheEventObject.timeStamp = Date.now();
     if (widget) {
       cacheEventObject.target = widget;
       let flag: VerbalObject | null = widget;

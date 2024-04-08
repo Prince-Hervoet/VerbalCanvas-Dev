@@ -4,6 +4,8 @@ import {
   staticVerbalCanvas,
 } from "../../src/core/StaticVerbalCanvas";
 import { VerbalObject } from "../../src/core/VerbalObject";
+import { Polygon } from "../../src/widgets/Polygon";
+import { Text } from "../../src/widgets/Text";
 import { Transformer } from "../../src/widgets/default/Transformer";
 
 const canvasTwo = document.getElementById("canvas_three") as HTMLCanvasElement;
@@ -58,9 +60,14 @@ btnCanvasThreeDrawRect?.addEventListener("click", () => {
     height: 100,
     style: { fillStyle: "orange" },
   });
-  console.log(rect);
-
-  verbalCanvas.place(rect);
+  const ply = new Text({
+    x: 250,
+    y: 200,
+    text: "Hello World",
+    maxWidth: -1,
+    style: { fillStyle: "orange", font: "48px serif" },
+  });
+  verbalCanvas.place(ply);
 });
 btnCanvasThreeDrawCircle?.addEventListener("click", () => {
   const circle = StaticVerbalCanvas.Ellipse({

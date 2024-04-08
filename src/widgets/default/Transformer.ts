@@ -52,8 +52,8 @@ export class Transformer extends BaseWidget {
     if (!this.linkTarget) return;
     this.x = this.linkTarget.getX();
     this.y = this.linkTarget.getY();
-    this.width = this.linkTarget.getWidth();
-    this.height = this.linkTarget.getHeight();
+    this.width = this.linkTarget.getFinalWidth();
+    this.height = this.linkTarget.getFinalHeight();
     this.rotate = this.linkTarget.getRotate();
     this._updateCenterPoint();
     this._updateBoundingBoxVertices();

@@ -93,7 +93,8 @@ export class VerbalLayer extends BaseContainer {
     let flag = this.objectList.getTail();
     while (flag) {
       const widget = flag.getValue();
-      if (widget.isPointInObject(point)) return widget;
+      if (widget.getIsPointEvent())
+        if (widget.isPointInObject(point)) return widget;
       flag = flag.prev;
     }
     return null;

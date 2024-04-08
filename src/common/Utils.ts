@@ -60,6 +60,15 @@ export function isPlainObject(obj: any) {
   return isObject(obj) && Object.keys(obj).length === 0;
 }
 
+export function hasProperty(obj: any, key: string): boolean {
+  if (!isObject(obj)) return false;
+  return key in obj;
+}
+
+export function createCanvasDom() {
+  return document.createElement("canvas");
+}
+
 // 解析SVG路径函数
 export function parseSvgPath(path: string) {
   if (!path) return [];

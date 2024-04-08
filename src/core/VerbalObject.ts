@@ -67,7 +67,6 @@ export abstract class VerbalObject implements IEventHandler {
    * @returns
    */
   static setContextStyle(ctx: CanvasRenderingContext2D, obj: VerbalObject) {
-    debugger;
     const style = obj.getAttr("style");
     if (!style || isPlainObject(style)) return;
     for (const key in style) {
@@ -84,13 +83,13 @@ export abstract class VerbalObject implements IEventHandler {
     let angle = obj.getRotate();
     if (angle === 0) {
       ctx.translate(obj.x, obj.y);
-      ctx.scale(obj.scaleX, obj.scaleY);
     } else {
       angle = degreesToRadians(angle);
       ctx.translate(obj.centerPoint.x, obj.centerPoint.y);
       ctx.rotate(angle);
       ctx.translate(obj.x - obj.centerPoint.x, obj.y - obj.centerPoint.y);
     }
+    ctx.scale(obj.scaleX, obj.scaleY);
   }
 
   protected static requestUpdate(obj: VerbalObject) {
@@ -113,15 +112,20 @@ export abstract class VerbalObject implements IEventHandler {
    * 更新中心点
    */
   protected _updateCenterPoint() {
-    this.centerPoint.x = this.x + (this.width * this.scaleX) / 2;
-    this.centerPoint.y = this.y + (this.height * this.scaleY) / 2;
+    this.centerPoint.x = this.x + this.getFinalWidth() / 2;
+    this.centerPoint.y = this.y + this.getFinalHeight() / 2;
   }
 
   /**
    * 更新包围盒点数组
    */
   protected _updateBoundingBoxVertices() {
-    let points = getCommonRectVertices(this.x, this.y, this.width, this.height);
+    let points = getCommonRectVertices(
+      this.x,
+      this.y,
+      this.getFinalWidth(),
+      this.getFinalHeight()
+    );
     if (this.rotate !== 0)
       points = rotateVertices(points, this.centerPoint, this.rotate, false);
     this.boundingBoxVertices = points;
@@ -338,6 +342,14 @@ export abstract class VerbalObject implements IEventHandler {
     return this.width;
   }
 
+  getFinalWidth() {
+    return this.width * this.scaleX;
+  }
+
+  getFinalHeight() {
+    return this.height * this.scaleY;
+  }
+
   getHeight() {
     return this.height;
   }
@@ -368,6 +380,10 @@ export abstract class VerbalObject implements IEventHandler {
 
   getVisible() {
     return this.visible;
+  }
+
+  getIsPointEvent() {
+    return this.isPointerEvent;
   }
 
   isPointInObject(point: Point): boolean {

@@ -1,6 +1,6 @@
 import { Point, isPointInPolygon } from "../common/MathUtils";
 import { setAttrIfExist } from "../common/Utils";
-import { BaseWidget } from "../core/BaseWidget";
+import { BaseWidget, V_WIDGET_TYPE } from "../core/BaseWidget";
 import { IPainter } from "../core/Painter";
 
 export class Picture extends BaseWidget {
@@ -10,7 +10,7 @@ export class Picture extends BaseWidget {
   constructor(fields: Record<string, any>) {
     super(fields);
     setAttrIfExist(this, "src", fields.src, "");
-    this.widgetType = "picture";
+    this.widgetType = V_WIDGET_TYPE.PICTURE;
   }
 
   public static solveSvgStr(svgStr: string): string {

@@ -3,6 +3,7 @@ import {
   getVerticesMinBoundingBox,
   isPointInPolygon,
 } from "../common/MathUtils";
+import { hasProperty } from "../common/Utils";
 import { BaseWidget } from "../core/BaseWidget";
 
 export class Polygon extends BaseWidget {
@@ -30,18 +31,18 @@ export class Polygon extends BaseWidget {
     newValue: Record<string, any>,
     oldValue: Record<string, any>
   ): void {
-    if (newValue.hasOwn("vertices")) {
+    if (hasProperty(newValue, "vertices")) {
       this.updatePolygonFields();
       return;
     }
-    if (newValue.hasOwn("width")) {
-      const vscaleX = oldValue.width / newValue.width;
+    if (hasProperty(newValue, "width")) {
+      const vscaleX = newValue.width / oldValue.width;
       for (const point of this.vertices) {
         point.x *= vscaleX;
       }
     }
-    if (newValue.hasOwn("height")) {
-      const vscaleY = oldValue.height / newValue.height;
+    if (hasProperty(newValue, "height")) {
+      const vscaleY = newValue.height / oldValue.height;
       for (const point of this.vertices) {
         point.y *= vscaleY;
       }
