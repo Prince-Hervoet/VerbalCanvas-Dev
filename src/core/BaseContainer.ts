@@ -1,5 +1,10 @@
 import { V_OBJECT_TYPE, VerbalObject } from "./VerbalObject";
 
+export const V_CONTAINER_TYPE = {
+  GROUP: "group",
+  VERBAL_LAYER: "verbalLayer",
+};
+
 export abstract class BaseContainer extends VerbalObject {
   protected containerType: string = "";
 

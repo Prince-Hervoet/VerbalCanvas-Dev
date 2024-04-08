@@ -57,7 +57,7 @@ export function isObject(val: any): val is Object {
  * @returns
  */
 export function isPlainObject(obj: any) {
-  return !!obj && obj.constructor === Object;
+  return isObject(obj) && Object.keys(obj).length === 0;
 }
 
 // 解析SVG路径函数

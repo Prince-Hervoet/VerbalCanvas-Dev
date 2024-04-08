@@ -45,16 +45,16 @@ export type EventHandlersType = {
  * @param verbal
  */
 export function bindEventMapping(verbal: VerbalLayer) {
-  const cacheMousePoint = { x: 0, y: 0 };
+  const cacheMousePoint = { x: 0, y: 0 }; // 缓存鼠标坐标点
   const cacheEventObject: SimpleEventType = {
     veEventName: "",
     target: verbal,
     currentTarget: verbal,
     hostMouseEvent: null,
     timeStamp: 0,
-  };
+  }; // 缓存事件对象
   const handler = (hostMouseEvent: MouseEvent, veEventName: string) => {
-    cacheMousePoint.x = hostMouseEvent.offsetX;
+    cacheMousePoint.x = hostMouseEvent.offsetX; // 每次都赋值而不是创建新的对象
     cacheMousePoint.y = hostMouseEvent.offsetY;
     const widget = verbal.isPointInOneObject(cacheMousePoint);
     cacheEventObject.veEventName = veEventName;

@@ -4,7 +4,7 @@ import {
   getGroupBoundingBox,
   isPointInPolygon,
 } from "../common/MathUtils";
-import { BaseContainer } from "./BaseContainer";
+import { BaseContainer, V_CONTAINER_TYPE } from "./BaseContainer";
 import { VerbalObject } from "./VerbalObject";
 import { IPainter } from "./Painter";
 
@@ -13,7 +13,7 @@ export class Group extends BaseContainer {
 
   constructor() {
     super();
-    this.containerType = "group";
+    this.containerType = V_CONTAINER_TYPE.GROUP;
   }
 
   private updateGroupFields() {

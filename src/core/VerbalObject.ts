@@ -67,6 +67,7 @@ export abstract class VerbalObject implements IEventHandler {
    * @returns
    */
   static setContextStyle(ctx: CanvasRenderingContext2D, obj: VerbalObject) {
+    debugger;
     const style = obj.getAttr("style");
     if (!style || isPlainObject(style)) return;
     for (const key in style) {

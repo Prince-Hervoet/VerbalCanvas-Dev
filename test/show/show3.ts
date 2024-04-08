@@ -58,6 +58,8 @@ btnCanvasThreeDrawRect?.addEventListener("click", () => {
     height: 100,
     style: { fillStyle: "orange" },
   });
+  console.log(rect);
+
   verbalCanvas.place(rect);
 });
 btnCanvasThreeDrawCircle?.addEventListener("click", () => {

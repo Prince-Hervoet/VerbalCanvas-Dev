@@ -1,6 +1,6 @@
 import { Point } from "../common/MathUtils";
 import { SimpleHashList } from "../common/SimpleHashList";
-import { BaseContainer } from "./BaseContainer";
+import { BaseContainer, V_CONTAINER_TYPE } from "./BaseContainer";
 import { Canvas } from "./Canvas";
 import { VERBAL_EVENT_TYPE } from "./EventMapping";
 import { VerbalObject } from "./VerbalObject";
@@ -19,7 +19,7 @@ export class VerbalLayer extends BaseContainer {
     if (painter) this.painter = painter;
     else this.painter = new BasePainter(this.canvas.getContext());
     this.deleteNeedlessFields();
-    this.containerType = "verbalLayer";
+    this.containerType = V_CONTAINER_TYPE.VERBAL_LAYER;
   }
 
   private deleteNeedlessFields() {

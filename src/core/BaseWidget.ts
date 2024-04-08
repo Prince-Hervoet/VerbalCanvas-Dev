@@ -1,6 +1,14 @@
 import { Point } from "../common/MathUtils";
 import { V_OBJECT_TYPE, VerbalObject } from "./VerbalObject";
 
+export const V_WIDGET_TYPE = {
+  RECT: "rect",
+  ELLIPSE: "ellipse",
+  PICTURE: "picture",
+  LINE: "line",
+  POLYGON: "polygon",
+};
+
 export abstract class BaseWidget extends VerbalObject {
   protected widgetType: string = "";
   protected vertices: Point[] = [];
