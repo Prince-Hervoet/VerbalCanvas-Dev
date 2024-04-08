@@ -48,22 +48,16 @@ export class Transformer extends BaseWidget {
   }
 
   private udpateTransformerFields() {
-    if (this.linkTarget) {
-      this.x = this.linkTarget.getX();
-      this.y = this.linkTarget.getY();
-      this.width = this.linkTarget.getWidth();
-      this.height = this.linkTarget.getHeight();
-      this.rotate = this.linkTarget.getRotate();
-      this._updateCenterPoint();
-      this._updateBoundingBoxVertices();
-      this.updateTransformGlobalVertices();
-      this.updateTransformerVertices();
-    } else {
-      this.x = 0;
-      this.y = 0;
-      this.width = 0;
-      this.height = 0;
-    }
+    if (!this.linkTarget) return;
+    this.x = this.linkTarget.getX();
+    this.y = this.linkTarget.getY();
+    this.width = this.linkTarget.getWidth();
+    this.height = this.linkTarget.getHeight();
+    this.rotate = this.linkTarget.getRotate();
+    this._updateCenterPoint();
+    this._updateBoundingBoxVertices();
+    this.updateTransformGlobalVertices();
+    this.updateTransformerVertices();
   }
 
   private updateTransformerVertices() {
@@ -152,7 +146,7 @@ export class Transformer extends BaseWidget {
     const neRotateRad = -rotateRad;
     let nWidth = 0,
       nHeight = 0;
-    let temp1: Point, temp2: Point, temp3: Point;
+    let temp1: Point, temp2: Point;
     let shouldIndex = index;
     let updateResult: any = {};
     const mathCos = Math.cos(rotateRad);

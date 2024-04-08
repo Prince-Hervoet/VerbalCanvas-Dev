@@ -23,6 +23,9 @@ export interface SimpleEventType {
   timeStamp: number;
 }
 
+/**
+ * 事件订阅触发处理接口
+ */
 export interface IEventHandler {
   eventOn(name: string, handler: Function): void;
   eventOff(name: string, handler?: Function): void;
@@ -30,6 +33,9 @@ export interface IEventHandler {
   hasEvent(name: string): boolean;
 }
 
+/**
+ * 事件处理函数集合类型
+ */
 export type EventHandlersType = {
   [property: string]: Function[];
 };
@@ -91,6 +97,11 @@ export function bindEventMapping(verbal: VerbalLayer) {
   return eventMapping;
 }
 
+/**
+ * 解绑事件监听
+ * @param verbal
+ * @param eventMapping
+ */
 export function unbindEventMapping(
   verbal: VerbalLayer,
   eventMapping: Record<string, (event: MouseEvent) => void>

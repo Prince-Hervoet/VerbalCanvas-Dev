@@ -17,28 +17,11 @@ export class Line extends BaseWidget {
     this.height = this.vertices[1].y - this.y;
   }
 
-  private updateLineVertices() {
-    this.vertices[0].x = this.x;
-    this.vertices[0].y = this.y;
-    this.vertices[1].x = this.x + this.width;
-    this.vertices[1].y = this.y + this.height;
-  }
-
   protected _update(
     newValue: Record<string, any>,
     oldValue: Record<string, any>
   ): void {
-    if (
-      newValue.hasOwn("x") ||
-      newValue.hasOwn("y") ||
-      newValue.hasOwn("width") ||
-      newValue.hasOwn("height")
-    ) {
-      this.updateLineVertices();
-    }
-    if (newValue.hasOwn("vertices")) {
-      this.updateLineFields();
-    }
+    this.updateLineFields();
   }
 
   public isPointInObject(point: Point): boolean {
