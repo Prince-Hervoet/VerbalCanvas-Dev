@@ -1,4 +1,4 @@
-import { ISimpleEvent } from "../../src/core/EventMapping";
+import { SimpleEventType } from "../../src/core/EventMapping";
 import {
   StaticVerbalCanvas,
   staticVerbalCanvas,
@@ -31,7 +31,7 @@ const btnCanvasTwoDrawCircle = document.getElementById("canvasTwo_drawCircle");
 let catching: VerbalObject | null = null;
 let nOffsetX: number = 0;
 let nOffsetY: number = 0;
-verbalCanvas.eventOn("ve-mousedown", (event: ISimpleEvent) => {
+verbalCanvas.eventOn("ve-mousedown", (event: SimpleEventType) => {
   const target = event.target;
   if (target && target.getObjectType() === "widget") {
     const { offsetX, offsetY } = event.hostMouseEvent!;
@@ -41,14 +41,14 @@ verbalCanvas.eventOn("ve-mousedown", (event: ISimpleEvent) => {
   }
 });
 
-verbalCanvas.eventOn("ve-mousemove", (event: ISimpleEvent) => {
+verbalCanvas.eventOn("ve-mousemove", (event: SimpleEventType) => {
   if (catching) {
     const { offsetX, offsetY } = event.hostMouseEvent!;
     catching.simplelyMoveCalFields(offsetX - nOffsetX, offsetY - nOffsetY);
   }
 });
 
-verbalCanvas.eventOn("ve-mouseup", (event: ISimpleEvent) => {
+verbalCanvas.eventOn("ve-mouseup", (event: SimpleEventType) => {
   if (catching) {
     const { offsetX, offsetY } = event.hostMouseEvent!;
     catching.setFields({ x: offsetX - nOffsetX, y: offsetY - nOffsetY }, true);
@@ -60,8 +60,8 @@ btnCanvasTwoDrawRect?.addEventListener("click", () => {
   const rect = StaticVerbalCanvas.Rect({
     x: 100,
     y: 100,
-    width: 200,
-    height: 200,
+    width: 100,
+    height: 100,
     style: { fillStyle: "orange" },
   });
   verbalCanvas.place(rect);

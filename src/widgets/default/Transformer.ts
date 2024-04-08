@@ -442,7 +442,7 @@ export class Transformer extends BaseWidget {
         };
         break;
       case ControlPointNames.RIGHT_CENTER:
-        debugger;
+        // debugger;
         pos1 = getPointLineSide(mousePoint, boundingBox[0], boundingBox[3]);
         pos2 = getPointLineSide(boundingBox[1], boundingBox[0], boundingBox[3]);
         if (pos1 !== pos2) {

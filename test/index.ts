@@ -1,5 +1,5 @@
 import { parseSvgPath } from "../src/common/Utils";
-import { ISimpleEvent } from "../src/core/EventMapping";
+import { SimpleEventType } from "../src/core/EventMapping";
 import { Group } from "../src/core/Group";
 import {
   StaticVerbalCanvas,
@@ -74,7 +74,7 @@ console.log(text);
 transformer.linkTo(rect);
 svc.place(rect, transformer);
 svc.startEvent();
-svc.eventOn("ve-mousedown", (event: ISimpleEvent) => {
+svc.eventOn("ve-mousedown", (event: SimpleEventType) => {
   console.log(event);
 });
 

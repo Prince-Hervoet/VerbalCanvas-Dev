@@ -9,9 +9,10 @@ import {
 } from "../common/MathUtils";
 import { BaseContainer } from "./BaseContainer";
 import {
+  EventHandlersType,
   IEventHandler,
+  SimpleEventType,
   VERBAL_EVENT_TYPE,
-  createSimpleEvent,
 } from "./EventMapping";
 import { IPainter } from "./Painter";
 
@@ -41,7 +42,14 @@ export abstract class VerbalObject implements IEventHandler {
   protected parent: BaseContainer | null = null;
   protected visible: boolean = true;
   protected isPointerEvent: boolean = true;
-  protected eventHandlers: Record<string, Function[]> = {};
+  protected eventHandlers: EventHandlersType = {};
+  protected static cacheEventObject: SimpleEventType = {
+    veEventName: "",
+    target: null,
+    currentTarget: null,
+    hostMouseEvent: null,
+    timeStamp: 0,
+  };
 
   constructor(fields: Record<string, any> = {}) {
     // this._initFields(fields);
@@ -76,9 +84,14 @@ export abstract class VerbalObject implements IEventHandler {
   }
 
   protected static requestUpdate(obj: VerbalObject) {
+    VerbalObject.cacheEventObject.target = obj;
+    VerbalObject.cacheEventObject.veEventName =
+      VERBAL_EVENT_TYPE._VE_REQUEST_UPDATE;
+    VerbalObject.cacheEventObject.currentTarget = obj;
+    VerbalObject.cacheEventObject.timeStamp = Date.now();
     obj.eventRun(
       VERBAL_EVENT_TYPE._VE_REQUEST_UPDATE,
-      createSimpleEvent(VERBAL_EVENT_TYPE._VE_REQUEST_UPDATE, obj, null)
+      VerbalObject.cacheEventObject
     );
   }
 
@@ -372,5 +385,9 @@ export abstract class VerbalObject implements IEventHandler {
     this.eventHandlers[name].forEach((value: Function) => {
       value.call(null, ...args);
     });
+  }
+
+  hasEvent(name: string): boolean {
+    return this.eventHandlers.hasOwnProperty(name);
   }
 }

@@ -15,9 +15,10 @@ export const VERBAL_EVENT_TYPE = {
 /**
  * 简单事件对象接口
  */
-export interface ISimpleEvent {
+export interface SimpleEventType {
   veEventName: string;
   target: VerbalObject | null;
+  currentTarget: VerbalObject | null;
   hostMouseEvent: MouseEvent | null;
   timeStamp: number;
 }
@@ -26,47 +27,48 @@ export interface IEventHandler {
   eventOn(name: string, handler: Function): void;
   eventOff(name: string, handler?: Function): void;
   eventRun(name: string, ...args: any[]): void;
+  hasEvent(name: string): boolean;
 }
 
-export function createSimpleEvent(
-  veEventName: string,
-  target: VerbalObject | null,
-  hostMouseEvent: MouseEvent | null
-) {
-  return {
-    veEventName,
-    target,
-    hostMouseEvent,
-    timeStamp: Date.now(),
-  };
-}
+export type EventHandlersType = {
+  [property: string]: Function[];
+};
 
 /**
  * 绑定事件映射器，将浏览器的基本鼠标事件映射到canvas画布上
  * @param verbal
  */
 export function bindEventMapping(verbal: VerbalLayer) {
+  const cacheMousePoint = { x: 0, y: 0 };
+  const cacheEventObject: SimpleEventType = {
+    veEventName: "",
+    target: verbal,
+    currentTarget: verbal,
+    hostMouseEvent: null,
+    timeStamp: 0,
+  };
   const handler = (hostMouseEvent: MouseEvent, veEventName: string) => {
-    const widget = verbal.isPointInOneObject({
-      x: hostMouseEvent.offsetX,
-      y: hostMouseEvent.offsetY,
-    });
+    cacheMousePoint.x = hostMouseEvent.offsetX;
+    cacheMousePoint.y = hostMouseEvent.offsetY;
+    const widget = verbal.isPointInOneObject(cacheMousePoint);
+    cacheEventObject.veEventName = veEventName;
+    cacheEventObject.hostMouseEvent = hostMouseEvent;
+    cacheEventObject.timeStamp = Date.now();
     if (widget) {
-      const eventArgs = createSimpleEvent(veEventName, widget, hostMouseEvent);
+      cacheEventObject.target = widget;
       let flag: VerbalObject | null = widget;
       while (flag) {
-        flag.eventRun(veEventName, eventArgs);
+        cacheEventObject.currentTarget = flag;
+        flag.eventRun(veEventName, cacheEventObject);
         flag = flag.getParent();
       }
     } else {
-      verbal.eventRun(
-        veEventName,
-        createSimpleEvent(veEventName, verbal, hostMouseEvent)
-      );
+      if (!verbal.hasEvent(veEventName)) return;
+      cacheEventObject.target = verbal;
+      cacheEventObject.currentTarget = verbal;
+      verbal.eventRun(veEventName, cacheEventObject);
     }
   };
-
-  const targetDom = verbal.getCanvasDom();
   const eventMapping = {
     click: (event: MouseEvent) => {
       handler(event, VERBAL_EVENT_TYPE.VE_CLICK);
@@ -81,6 +83,7 @@ export function bindEventMapping(verbal: VerbalLayer) {
       handler(event, VERBAL_EVENT_TYPE.VE_MOUSEMOVE);
     },
   };
+  const targetDom = verbal.getCanvasDom();
   targetDom.addEventListener("click", eventMapping.click);
   targetDom.addEventListener("mousedown", eventMapping.mousedown);
   targetDom.addEventListener("mouseup", eventMapping.mouseup);
