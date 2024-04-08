@@ -10,6 +10,7 @@ import {
   getTwoVectorsAngle,
   isPointInCircle,
   rotatePoint,
+  rotateVertices,
 } from "../../common/MathUtils";
 import { isPlainObject } from "../../common/Utils";
 import { BaseWidget } from "../../core/BaseWidget";
@@ -33,7 +34,7 @@ export class Transformer extends BaseWidget {
   private circleRadius: number = 8;
   private globalVertices: Point[] = [];
 
-  constructor(fields: Record<string, any>) {
+  constructor(fields: Record<string, any> = {}) {
     super(fields);
     this.setDefaultStyle();
     this.widgetType = "transformer";
@@ -58,6 +59,7 @@ export class Transformer extends BaseWidget {
     this._updateBoundingBoxVertices();
     this.updateTransformGlobalVertices();
     this.updateTransformerVertices();
+    console.log(this.centerPoint);
   }
 
   private updateTransformerVertices() {
@@ -65,14 +67,14 @@ export class Transformer extends BaseWidget {
     const halfHeight = this.height / 2;
     this.vertices = [
       { x: 0, y: 0 },
-      { x: halfWidth, y: 0 },
       { x: this.width, y: 0 },
-      { x: this.width, y: halfHeight },
       { x: this.width, y: this.height },
-      { x: halfWidth, y: this.height },
       { x: 0, y: this.height },
-      { x: 0, y: halfHeight },
       { x: halfWidth, y: -28 },
+      { x: halfWidth, y: 0 },
+      { x: this.width, y: halfHeight },
+      { x: halfWidth, y: this.height },
+      { x: 0, y: halfHeight },
     ];
   }
 
@@ -85,15 +87,22 @@ export class Transformer extends BaseWidget {
     const temp4 = this.y + halfHeight;
     this.globalVertices = [
       { x: this.x, y: this.y },
-      { x: temp2, y: this.y },
       { x: temp1, y: this.y },
-      { x: temp1, y: temp4 },
       { x: temp1, y: temp3 },
-      { x: temp2, y: temp3 },
       { x: this.x, y: temp3 },
-      { x: this.x, y: temp4 },
       { x: temp2, y: this.y - 28 },
+      { x: temp2, y: this.y },
+      { x: temp1, y: temp4 },
+      { x: temp2, y: temp3 },
+      { x: this.x, y: temp4 },
     ];
+    if (this.rotate === 0) return;
+    this.globalVertices = rotateVertices(
+      this.globalVertices,
+      this.centerPoint,
+      this.rotate,
+      false
+    );
   }
 
   protected _update(
@@ -213,8 +222,8 @@ export class Transformer extends BaseWidget {
         temp1 = getMidPoint(mousePoint, boundingBox[2]);
         temp2 = rotatePoint(mousePoint, temp1, neRotateRad, true);
         updateResult = {
-          left: temp2.x,
-          top: temp2.y,
+          x: temp2.x,
+          y: temp2.y,
           width: nWidth,
           height: nHeight,
         };
@@ -277,8 +286,8 @@ export class Transformer extends BaseWidget {
         temp1 = getMidPoint(mousePoint, boundingBox[3]);
         temp2 = rotatePoint(mousePoint, temp1, neRotateRad, true);
         updateResult = {
-          left: temp2.x - nWidth,
-          top: temp2.y,
+          x: temp2.x - nWidth,
+          y: temp2.y,
           width: nWidth,
           height: nHeight,
         };
@@ -397,8 +406,8 @@ export class Transformer extends BaseWidget {
         temp1 = getMidPoint(mousePoint, boundingBox[1]);
         temp2 = rotatePoint(mousePoint, temp1, neRotateRad, true);
         updateResult = {
-          left: temp2.x,
-          top: temp2.y - nHeight,
+          x: temp2.x,
+          y: temp2.y - nHeight,
           width: nWidth,
           height: nHeight,
         };
@@ -430,8 +439,8 @@ export class Transformer extends BaseWidget {
         };
         temp1 = rotatePoint(temp1, temp2, neRotateRad, true);
         updateResult = {
-          left: temp1.x - this.width / 2,
-          top: temp1.y - nHeight,
+          x: temp1.x - this.width / 2,
+          y: temp1.y - nHeight,
           height: nHeight,
         };
         break;
@@ -490,8 +499,8 @@ export class Transformer extends BaseWidget {
         };
         temp1 = rotatePoint(temp1, temp2, -rotateRad, true);
         updateResult = {
-          left: temp1.x - nWidth,
-          top: temp2.y - this.height / 2,
+          x: temp1.x - nWidth,
+          y: temp2.y - this.height / 2,
           width: nWidth,
         };
         break;

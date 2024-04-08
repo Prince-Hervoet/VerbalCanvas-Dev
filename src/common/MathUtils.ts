@@ -313,45 +313,6 @@ export function getGroupBoundingBox(rectangles: Point[][]): {
 }
 
 /**
- * 加载图片
- * @param src
- * @returns
- */
-export function loadImage(src: string) {
-  return new Promise((res, rej) => {
-    const image = new Image();
-    image.src = src;
-    image.onload = () => {
-      res(image);
-    };
-    image.onerror = () => {
-      rej(null);
-    };
-  });
-}
-
-/**
- * 简单判断值是否为空 undefined和null
- * @param value
- * @returns
- */
-export function isEmptyValue(value: any) {
-  return value === undefined || value === null;
-}
-
-/**
- * 判断一列值是否全部为空
- * @param values
- * @returns
- */
-export function isEmptyValues(...values: any[]) {
-  for (const value of values) {
-    if (!isEmptyValue(value)) return false;
-  }
-  return true;
-}
-
-/**
  * 获取两个向量的夹角，带方向
  * @param v1
  * @param v2
@@ -443,4 +404,27 @@ export function getPointLineSide(
     else if (y0 === yn) pos = 0;
   }
   return pos;
+}
+
+/**
+ * 旋转一组点
+ * @param vertices
+ * @param centerPoint
+ * @param angle
+ * @param isAngleRadians
+ * @returns
+ */
+export function rotateVertices(
+  vertices: Point[],
+  centerPoint: Point,
+  angle: number,
+  isAngleRadians: boolean = false
+) {
+  if (!isAngleRadians) angle = degreesToRadians(angle);
+  if (angle === 0) return vertices;
+  const ans = [];
+  for (const point of vertices) {
+    ans.push(rotatePoint(point, centerPoint, angle, true));
+  }
+  return ans;
 }

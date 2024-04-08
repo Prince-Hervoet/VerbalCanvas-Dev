@@ -16,11 +16,12 @@
 
 
     .card-container {
-        height: 400px;
+        /* height: 500px; */
         border: 1px solid #cdcdcd;
         border-radius: 10px;
         box-shadow: 2px 1px 2px #cdcdcd;
         display: flex;
+        margin-bottom: 20px;
     }
 
     .card-left-container {
@@ -62,7 +63,7 @@
         <div class="card-container">
             <div class="card-left-container">
                 <div>
-                    <canvas id="canvas_one" width="800" height="400"></canvas>
+                    <canvas id="canvas_one" width="800" height="500"></canvas>
                 </div>
             </div>
             <div class="card-right-container">
@@ -73,7 +74,7 @@
         <div class="card-container">
             <div class="card-left-container">
                 <div>
-                    <canvas id="canvas_two" width="800" height="400"></canvas>
+                    <canvas id="canvas_two" width="800" height="500"></canvas>
                 </div>
             </div>
             <div class="card-right-container">
@@ -81,9 +82,22 @@
                 <button id="canvasTwo_drawCircle">绘制圆形</button>
             </div>
         </div>
+        <div class="card-container">
+            <div class="card-left-container">
+                <div>
+                    <canvas id="canvas_three" width="800" height="500"></canvas>
+                </div>
+            </div>
+            <div class="card-right-container">
+                <button id="canvasThree_drawRect">绘制矩形</button>
+                <button id="canvasThree_drawCircle">绘制圆形</button>
+            </div>
+        </div>
     </div>
 
 </body>
 <script src="./show.ts" type="module"></script>
+<script src="./show2.ts" type="module"></script>
+<script src="./show3.ts" type="module"></script>
 
 </html>

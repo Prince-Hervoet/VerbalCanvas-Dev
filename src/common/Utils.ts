@@ -3,17 +3,35 @@ export interface Command {
   args: number[];
 }
 
-export function isEmptyValue(value: any) {
+/**
+ * 判断值是否是null或者undefined
+ * @param value
+ * @returns
+ */
+export function isNullOrUndefined(value: any) {
   return value === null || value === undefined;
 }
 
-export function isEmptyValues(...values: any[]) {
+/**
+ * 判断一组值是否都为null或者undefined
+ * @param values
+ * @returns
+ */
+export function isAllNullOrUndefined(...values: any[]) {
   for (const value of values) {
-    if (!isEmptyValue(value)) return false;
+    if (!isNullOrUndefined(value)) return false;
   }
   return true;
 }
 
+/**
+ * 对一个对象设置值，如果属性不存在则不会执行
+ * @param target
+ * @param key
+ * @param value
+ * @param defaultValue
+ * @returns
+ */
 export function setAttrIfExist(
   target: any,
   key: string,
@@ -24,10 +42,20 @@ export function setAttrIfExist(
   if (key in target) target[key] = value ?? defaultValue;
 }
 
+/**
+ * 判断是否是一个对象
+ * @param val
+ * @returns
+ */
 export function isObject(val: any): val is Object {
   return val instanceof Object;
 }
 
+/**
+ * 判断是否是一个空对象
+ * @param obj
+ * @returns
+ */
 export function isPlainObject(obj: any) {
   return !!obj && obj.constructor === Object;
 }

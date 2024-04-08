@@ -70,7 +70,7 @@ const text = new Text({
 
 const transformer = new Transformer({});
 
-console.log(text);
+console.log(rect);
 transformer.linkTo(rect);
 svc.place(rect, transformer);
 svc.startEvent();
@@ -79,5 +79,5 @@ svc.eventOn("ve-mousedown", (event: SimpleEventType) => {
 });
 
 setTimeout(() => {
-  transformer.transformTarget({ x: 400, y: 107 }, 6);
+  transformer.transformTarget({ x: 50, y: 150 }, 0);
 }, 2000);

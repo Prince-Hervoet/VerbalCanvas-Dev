@@ -3,10 +3,14 @@ import {
   degreesToRadians,
   getCommonRectVertices,
   getNanoId,
-  isEmptyValue,
-  isEmptyValues,
   rotatePoint,
+  rotateVertices,
 } from "../common/MathUtils";
+import {
+  isNullOrUndefined,
+  isAllNullOrUndefined,
+  isPlainObject,
+} from "../common/Utils";
 import { BaseContainer } from "./BaseContainer";
 import {
   EventHandlersType,
@@ -44,7 +48,7 @@ export abstract class VerbalObject implements IEventHandler {
   protected isPointerEvent: boolean = true;
   protected eventHandlers: EventHandlersType = {};
   protected static cacheEventObject: SimpleEventType = {
-    veEventName: "",
+    veEventName: VERBAL_EVENT_TYPE._VE_REQUEST_UPDATE,
     target: null,
     currentTarget: null,
     hostMouseEvent: null,
@@ -56,37 +60,40 @@ export abstract class VerbalObject implements IEventHandler {
     this.vObjectId = getNanoId();
   }
 
-  public static setContextStyle(
-    ctx: CanvasRenderingContext2D,
-    obj: VerbalObject
-  ) {
+  /**
+   * 设置canvas上下文的风格
+   * @param ctx
+   * @param obj
+   * @returns
+   */
+  static setContextStyle(ctx: CanvasRenderingContext2D, obj: VerbalObject) {
     const style = obj.getAttr("style");
-    if (!style) return;
+    if (!style || isPlainObject(style)) return;
     for (const key in style) {
       if (key in ctx) (ctx as any)[key] = style[key];
     }
   }
 
-  public static setContextTransform(
-    ctx: CanvasRenderingContext2D,
-    obj: VerbalObject
-  ) {
-    const rotateRad = degreesToRadians(obj.getRotate());
-    if (rotateRad !== 0) {
-      const centerPoint = obj.getCenterPoint();
-      ctx.translate(centerPoint.x, centerPoint.y);
-      ctx.rotate(rotateRad);
-      ctx.translate(obj.x - centerPoint.x, obj.y - centerPoint.y);
-    } else {
+  /**
+   * 设置canvas上下文的变换属性
+   * @param ctx
+   * @param obj
+   */
+  static setContextTransform(ctx: CanvasRenderingContext2D, obj: VerbalObject) {
+    let angle = obj.getRotate();
+    if (angle === 0) {
       ctx.translate(obj.x, obj.y);
       ctx.scale(obj.scaleX, obj.scaleY);
+    } else {
+      angle = degreesToRadians(angle);
+      ctx.translate(obj.centerPoint.x, obj.centerPoint.y);
+      ctx.rotate(angle);
+      ctx.translate(obj.x - obj.centerPoint.x, obj.y - obj.centerPoint.y);
     }
   }
 
   protected static requestUpdate(obj: VerbalObject) {
     VerbalObject.cacheEventObject.target = obj;
-    VerbalObject.cacheEventObject.veEventName =
-      VERBAL_EVENT_TYPE._VE_REQUEST_UPDATE;
     VerbalObject.cacheEventObject.currentTarget = obj;
     VerbalObject.cacheEventObject.timeStamp = Date.now();
     obj.eventRun(
@@ -101,26 +108,35 @@ export abstract class VerbalObject implements IEventHandler {
     }
   }
 
+  /**
+   * 更新中心点
+   */
   protected _updateCenterPoint() {
     this.centerPoint.x = this.x + (this.width * this.scaleX) / 2;
     this.centerPoint.y = this.y + (this.height * this.scaleY) / 2;
   }
 
+  /**
+   * 更新包围盒点数组
+   */
   protected _updateBoundingBoxVertices() {
-    const points = getCommonRectVertices(
-      this.x,
-      this.y,
-      this.width,
-      this.height
-    );
+    let points = getCommonRectVertices(this.x, this.y, this.width, this.height);
     if (this.rotate !== 0)
-      for (let i = 0; i < points.length; ++i)
-        points[i] = rotatePoint(points[i], this.centerPoint, this.rotate);
+      points = rotateVertices(points, this.centerPoint, this.rotate, false);
     this.boundingBoxVertices = points;
   }
 
+  /**
+   * 子类自己实现的渲染方法
+   * @param painter
+   */
   protected _render(painter: IPainter) {}
 
+  /**
+   * 统一渲染调用函数
+   * @param painter
+   * @returns
+   */
   render(painter: IPainter) {
     if ((this.width === 0 && this.height === 0) || !this.visible) return;
     const ctx = painter.getContext();
@@ -131,6 +147,9 @@ export abstract class VerbalObject implements IEventHandler {
     ctx.restore();
   }
 
+  /**
+   * 修正中心点和左上角点的坐标位置，保证旋转拉伸的位置稳定
+   */
   protected _fixUpdateCenterPoint() {
     const halfFinalWidth = (this.width * this.scaleX) / 2;
     const halfFinalHeight = (this.height * this.scaleY) / 2;
@@ -176,6 +195,11 @@ export abstract class VerbalObject implements IEventHandler {
     this._update({ [key]: newValue }, oldValue);
   }
 
+  /**
+   * 单一属性更新，会请求渲染
+   * @param key
+   * @param newValue
+   */
   update(key: string, newValue: any) {
     this.silentlyUpdate(key, newValue);
     VerbalObject.requestUpdate(this);
@@ -197,21 +221,21 @@ export abstract class VerbalObject implements IEventHandler {
     newValue: Record<string, any>,
     oldValue: Record<string, any>
   ) {
-    const { width, height, scaleX, scaleY, left, top, rotate } = newValue;
-    if (!isEmptyValues(width, height, scaleX, scaleY)) {
-      if (!isEmptyValue(width)) {
+    const { width, height, scaleX, scaleY, x, y, rotate } = newValue;
+    if (!isAllNullOrUndefined(width, height, scaleX, scaleY)) {
+      if (!isNullOrUndefined(width)) {
         oldValue.width = this.width;
         this.width = width;
       }
-      if (!isEmptyValue(height)) {
+      if (!isNullOrUndefined(height)) {
         oldValue.height = this.height;
         this.height = height;
       }
-      if (!isEmptyValue(scaleX)) {
+      if (!isNullOrUndefined(scaleX)) {
         oldValue.scaleX = this.scaleX;
         this.scaleX = scaleX;
       }
-      if (!isEmptyValue(scaleY)) {
+      if (!isNullOrUndefined(scaleY)) {
         oldValue.scaleY = this.scaleY;
         this.scaleY = scaleY;
       }
@@ -224,24 +248,24 @@ export abstract class VerbalObject implements IEventHandler {
       delete newValue.scaleX;
       delete newValue.scaleY;
     }
-    if (!isEmptyValues(top, left, rotate)) {
-      if (!isEmptyValue(left)) {
-        oldValue.left = this.x;
-        this.y = newValue.left;
+    if (!isAllNullOrUndefined(x, y, rotate)) {
+      if (!isNullOrUndefined(x)) {
+        oldValue.x = this.x;
+        this.x = newValue.x;
       }
-      if (!isEmptyValue(top)) {
-        oldValue.top = this.y;
-        this.y = newValue.top;
+      if (!isNullOrUndefined(y)) {
+        oldValue.y = this.y;
+        this.y = newValue.y;
       }
-      if (!isEmptyValue(rotate)) {
+      if (!isNullOrUndefined(rotate)) {
         oldValue.rotate = this.rotate;
         this.rotate = newValue.rotate;
       }
       this._updateCenterPoint();
       //   this._updateVertices();
       //   if (this.rotate !== 0) this._rotateVertices();
-      delete newValue.top;
-      delete newValue.left;
+      delete newValue.x;
+      delete newValue.y;
       delete newValue.rotate;
     }
     this._updateBoundingBoxVertices();
@@ -260,7 +284,7 @@ export abstract class VerbalObject implements IEventHandler {
       this._updateBoundingBoxVertices();
       return;
     }
-    if (key === "top" || key === "left") {
+    if (key === "x" || key === "y") {
       this._updateCenterPoint();
       //   this._updateVertices();
       //   this._rotateVertices();
@@ -273,22 +297,23 @@ export abstract class VerbalObject implements IEventHandler {
       key === "scaleX" ||
       key === "scaleY"
     ) {
-      const halfFinalWidth = (this.width * this.scaleX) / 2;
-      const halfFinalHeight = (this.height * this.scaleY) / 2;
-      const nCenterPoint = {
-        x: this.x + halfFinalWidth,
-        y: this.y + halfFinalHeight,
-      };
-      this.centerPoint = rotatePoint(
-        nCenterPoint,
-        this.centerPoint,
-        this.rotate
-      );
-      this.x = this.centerPoint.x - halfFinalWidth;
-      this.y = this.centerPoint.y - halfFinalHeight;
+      this._fixUpdateCenterPoint();
+      this._updateBoundingBoxVertices();
+      // const halfFinalWidth = (this.width * this.scaleX) / 2;
+      // const halfFinalHeight = (this.height * this.scaleY) / 2;
+      // const nCenterPoint = {
+      //   x: this.x + halfFinalWidth,
+      //   y: this.y + halfFinalHeight,
+      // };
+      // this.centerPoint = rotatePoint(
+      //   nCenterPoint,
+      //   this.centerPoint,
+      //   this.rotate
+      // );
+      // this.x = this.centerPoint.x - halfFinalWidth;
+      // this.y = this.centerPoint.y - halfFinalHeight;
       //   this._updateVertices();
       //   this._rotateVertices();
-      this._updateBoundingBoxVertices();
     }
   }
 
@@ -356,10 +381,14 @@ export abstract class VerbalObject implements IEventHandler {
     return this.boundingBoxVertices;
   }
 
+  /**
+   * 转移父亲关系
+   * @param nContainer
+   * @returns
+   */
   transfer(nContainer: BaseContainer | null) {
     if (nContainer === this.parent) return;
     if (this.parent) this.parent.remove(this);
-    // if (nContainer) nContainer.place(this);
     this.parent = nContainer;
   }
 
