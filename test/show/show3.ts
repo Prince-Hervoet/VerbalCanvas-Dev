@@ -27,13 +27,14 @@ verbalCanvas.eventOn("ve-mousedown", (event: SimpleEventType) => {
         x: offsetX,
         y: offsetY,
       });
-      console.log(index);
+      // console.log(index);
     } else {
       transformer.linkTo(target);
       verbalCanvas.place(transformer);
-      setTimeout(() => {
-        transformer.transformTarget({ x: 50, y: 60 }, 5);
-      }, 2000);
+      // setTimeout(() => {
+      //   transformer.transformTarget({ x: 50, y: 60 }, 4);
+      //   transformer.transformTarget({ x: 50, y: 60 }, 5);
+      // }, 2000);
     }
   } else {
     verbalCanvas.remove(transformer);

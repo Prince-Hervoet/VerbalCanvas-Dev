@@ -33,16 +33,7 @@ export class Text extends BaseWidget {
     newValue: Record<string, any>,
     oldValue: Record<string, any>
   ): void {
-    if (hasProperty(newValue, "text") || hasProperty(newValue, "maxWidth"))
-      this.updateTextFields();
-    if (hasProperty(newValue, "height")) {
-      this.scaleY = newValue.height / oldValue.height;
-      this.height = oldValue.height;
-    }
-    if (hasProperty(newValue, "width")) {
-      this.scaleX = newValue.width / oldValue.width;
-      this.width = oldValue.width;
-    }
+    if (hasProperty(newValue, "text")) this.updateTextFields();
   }
 
   protected _render(painter: IPainter): void {

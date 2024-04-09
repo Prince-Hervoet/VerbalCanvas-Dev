@@ -12,21 +12,21 @@ import {
   rotatePoint,
   rotateVertices,
 } from "../../common/MathUtils";
-import { isPlainObject } from "../../common/Utils";
+import { hasProperty, isPlainObject } from "../../common/Utils";
 import { BaseWidget } from "../../core/BaseWidget";
 import { IPainter } from "../../core/Painter";
 import { VerbalObject } from "../../core/VerbalObject";
 
 enum ControlPointNames {
-  TOP_LEFT,
-  TOP_RIGHT,
-  BOTTOM_RIGHT,
-  BOTTOM_LEFT,
-  ROTATE_POINT,
-  TOP_CENTER,
-  RIGHT_CENTER,
-  BOTTOM_CENTER,
-  LEFT_CENTER,
+  TOP_LEFT, // 左上角
+  TOP_RIGHT, // 右上角
+  BOTTOM_RIGHT, // 右下角
+  BOTTOM_LEFT, // 左下角
+  ROTATE_POINT, // 旋转点
+  TOP_CENTER, // 中上
+  RIGHT_CENTER, // 右中
+  BOTTOM_CENTER, // 下中
+  LEFT_CENTER, // 左中
 }
 
 export class Transformer extends BaseWidget {
@@ -59,7 +59,6 @@ export class Transformer extends BaseWidget {
     this._updateBoundingBoxVertices();
     this.updateTransformGlobalVertices();
     this.updateTransformerVertices();
-    console.log(this.centerPoint);
   }
 
   private updateTransformerVertices() {
@@ -505,8 +504,26 @@ export class Transformer extends BaseWidget {
         };
         break;
     }
-    this.linkTarget.setFields(updateResult, false);
+    const targetUpdateResult = this.changeUpdateResultToScale(updateResult);
+    this.linkTarget.setFields(targetUpdateResult, false);
     this.setFields(updateResult, true);
     return shouldIndex;
+  }
+
+  private changeUpdateResultToScale(updateResult: any) {
+    let targetUpdateResult: any = {};
+    if (!this.linkTarget) return targetUpdateResult;
+    targetUpdateResult = Object.assign({}, updateResult);
+    if (hasProperty(updateResult, "width")) {
+      targetUpdateResult.scaleX =
+        updateResult.width / this.linkTarget.getWidth();
+      delete targetUpdateResult.width;
+    }
+    if (hasProperty(updateResult, "height")) {
+      targetUpdateResult.scaleY =
+        updateResult.height / this.linkTarget.getHeight();
+      delete targetUpdateResult.height;
+    }
+    return targetUpdateResult;
   }
 }

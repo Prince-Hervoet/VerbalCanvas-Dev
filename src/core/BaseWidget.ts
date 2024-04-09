@@ -13,6 +13,7 @@ export abstract class BaseWidget extends VerbalObject {
   protected widgetType: string = "";
   protected vertices: Point[] = [];
   protected style: Record<string, any> = {};
+  protected isFixedLineWidth: boolean = false;
 
   constructor(fields: Record<string, any> = {}) {
     super(fields);

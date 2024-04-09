@@ -62,15 +62,13 @@ const text = new Text({
   x: 100,
   y: 100,
   text: "Hello World!",
-  maxWidth: -1,
   style: {
+    fillStyle: "blue",
     font: "40px Arial",
   },
 });
 
 const transformer = new Transformer({});
-
-console.log(rect);
 transformer.linkTo(rect);
 svc.place(rect, transformer);
 svc.startEvent();
@@ -79,5 +77,17 @@ svc.eventOn("ve-mousedown", (event: SimpleEventType) => {
 });
 
 setTimeout(() => {
-  transformer.transformTarget({ x: 50, y: 150 }, 0);
+  // debugger;
+  // rect.update("rotate", 45);
+  // rect.update("scaleX", 1.3);
+  // transformer.update("rotate", 45);
+  // transformer.transformTarget({ x: 270, y: 90 }, 4);
+  // console.log(text);
+  console.log(transformer);
+  transformer.transformTarget({ x: 300, y: 90 }, 5);
+  // console.log(text);
+  // console.log(transformer);
+  // transformer.transformTarget({ x: 350, y: 90 }, 5);
+  // console.log(text);
+  // console.log(transformer);
 }, 2000);

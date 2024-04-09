@@ -1,3 +1,5 @@
+import { degreesToRadians } from "../common/MathUtils";
+import { getCtxTransformSclae, recoverContextScale } from "../common/Utils";
 import { BaseWidget } from "./BaseWidget";
 import { VerbalObject } from "./VerbalObject";
 
@@ -29,12 +31,25 @@ export class BasePainter implements IPainter {
     const widgetType: string = widget.getAttr("widgetType");
     if (!BasePainter.sustainingTypes.includes(widgetType)) return false;
     const style = widget.getAttr("style");
+    const isFixedLineWidth = widget.getAttr("isFixedLineWidth");
     this.context.save();
     VerbalObject.setContextTransform(this.context, widget);
     VerbalObject.setContextStyle(this.context, widget);
     this.setContextPath(widget, widgetType);
     if (style.fillStyle) this.context.fill();
-    if (style.strokeStyle) this.context.stroke();
+    if (style.strokeStyle) {
+      if (isFixedLineWidth) {
+        const [scaleX, scaleY] = getCtxTransformSclae(this.context);
+        recoverContextScale(this.context);
+        this.setContextPath(
+          widget,
+          widgetType,
+          widget.getWidth() * scaleX,
+          widget.getHeight() * scaleY
+        );
+      }
+      this.context.stroke();
+    }
     this.context.restore();
     return true;
   }

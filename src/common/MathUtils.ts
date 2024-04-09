@@ -371,6 +371,14 @@ export function getDistanceToLine(
   return Math.abs(A * x0 + B * y0 + C) / Math.sqrt(A * A + B * B);
 }
 
+export function getLineYByX(x: number, lineStart: Point, lineEnd: Point) {
+  const { x: x1, y: y1 } = lineStart;
+  const { x: x2, y: y2 } = lineEnd;
+  const A = y2 - y1;
+  const B = x1 - x2;
+  const C = x2 * y1 - x1 * y2;
+}
+
 /**
  * 获取点在直线的哪一侧 1表示左边或者上边 -1表示右边或者下边 0表示在直线上
  * @param point

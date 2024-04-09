@@ -156,8 +156,8 @@ export abstract class VerbalObject implements IEventHandler {
    * 修正中心点和左上角点的坐标位置，保证旋转拉伸的位置稳定
    */
   protected _fixUpdateCenterPoint() {
-    const halfFinalWidth = (this.width * this.scaleX) / 2;
-    const halfFinalHeight = (this.height * this.scaleY) / 2;
+    const halfFinalWidth = this.getFinalWidth() / 2;
+    const halfFinalHeight = this.getFinalHeight() / 2;
     const nCenterPoint = {
       x: this.x + halfFinalWidth,
       y: this.y + halfFinalHeight,

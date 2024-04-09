@@ -1,3 +1,6 @@
+/**
+ * 链表节点
+ */
 class SimpleListNode<K, V> {
   public key: K;
   public value: V;
@@ -26,6 +29,9 @@ class SimpleListNode<K, V> {
   }
 }
 
+/**
+ * 哈希链表
+ */
 export class SimpleHashList<K, V> {
   private head: SimpleListNode<K, V> | null = null;
   private tail: SimpleListNode<K, V> | null = null;

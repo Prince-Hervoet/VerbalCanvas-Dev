@@ -60,13 +60,50 @@ export function isPlainObject(obj: any) {
   return isObject(obj) && Object.keys(obj).length === 0;
 }
 
+/**
+ * 判断对象是否有某个属性
+ * @param obj
+ * @param key
+ * @returns
+ */
 export function hasProperty(obj: any, key: string): boolean {
   if (!isObject(obj)) return false;
   return key in obj;
 }
 
+/**
+ * 创建一个canvas DOM
+ * @returns
+ */
 export function createCanvasDom() {
   return document.createElement("canvas");
+}
+
+/**
+ * 恢复canvas上下文的scale属性
+ * @param ctx
+ */
+export function recoverContextScale(ctx: CanvasRenderingContext2D) {
+  const current = ctx.getTransform();
+  const rotateRad = Math.atan2(current.b, current.a);
+  const mathCos = Math.cos(rotateRad);
+  const scaleX = current.a / mathCos;
+  const scaleY = current.d / mathCos;
+  ctx.scale(1 / scaleX, 1 / scaleY);
+}
+
+/**
+ * 获取canvas上下文的scale变换值
+ * @param ctx
+ * @returns
+ */
+export function getCtxTransformSclae(ctx: CanvasRenderingContext2D) {
+  const current = ctx.getTransform();
+  const { a, b, d } = current;
+  const rotateRad = Math.atan2(b, a);
+  const scaleX = a / Math.cos(rotateRad);
+  const scaleY = d / Math.cos(rotateRad);
+  return [scaleX, scaleY];
 }
 
 // 解析SVG路径函数
