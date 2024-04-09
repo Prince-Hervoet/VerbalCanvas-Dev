@@ -16,7 +16,7 @@ import {
   EventHandlersType,
   IEventHandler,
   SimpleEventType,
-  VERBAL_EVENT_TYPE,
+  INNER_EVENT_TYPE,
 } from "./EventMapping";
 import { IPainter } from "./Painter";
 
@@ -48,7 +48,7 @@ export abstract class VerbalObject implements IEventHandler {
   protected isPointerEvent: boolean = true;
   protected eventHandlers: EventHandlersType = {};
   protected static cacheEventObject: SimpleEventType = {
-    veEventName: VERBAL_EVENT_TYPE._VE_REQUEST_UPDATE,
+    veEventName: INNER_EVENT_TYPE._VE_REQUEST_UPDATE,
     target: null,
     currentTarget: null,
     hostMouseEvent: null,
@@ -97,7 +97,7 @@ export abstract class VerbalObject implements IEventHandler {
     VerbalObject.cacheEventObject.currentTarget = obj;
     VerbalObject.cacheEventObject.timeStamp = Date.now();
     obj.eventRun(
-      VERBAL_EVENT_TYPE._VE_REQUEST_UPDATE,
+      INNER_EVENT_TYPE._VE_REQUEST_UPDATE,
       VerbalObject.cacheEventObject
     );
   }

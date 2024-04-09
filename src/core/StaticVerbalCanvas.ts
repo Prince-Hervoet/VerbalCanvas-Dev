@@ -4,7 +4,11 @@ import { Picture } from "../widgets/Picture";
 import { Polygon } from "../widgets/Polygon";
 import { Rect } from "../widgets/Rect";
 import { Canvas } from "./Canvas";
-import { bindEventMapping, unbindEventMapping } from "./EventMapping";
+import {
+  EventController,
+  bindEventMapping,
+  unbindEventMapping,
+} from "./EventMapping";
 import { VerbalLayer } from "./VerbalLayer";
 import { VerbalObject } from "./VerbalObject";
 
@@ -24,9 +28,12 @@ export class StaticVerbalCanvas {
   private verbalLayer: VerbalLayer;
   private eventMapping: Record<string, (event: MouseEvent) => void> | null =
     null;
+  private eventController: EventController | null = null;
 
   constructor(verbalLayer: VerbalLayer) {
     this.verbalLayer = verbalLayer;
+    this.eventController = new EventController(verbalLayer);
+    // this.eventController.bindEventMapping();
   }
 
   place(...objs: VerbalObject[]) {

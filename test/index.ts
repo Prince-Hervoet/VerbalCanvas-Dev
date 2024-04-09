@@ -71,9 +71,21 @@ const text = new Text({
 const transformer = new Transformer({});
 transformer.linkTo(rect);
 svc.place(rect, transformer);
-svc.startEvent();
-svc.eventOn("ve-mousedown", (event: SimpleEventType) => {
-  console.log(event);
+// svc.startEvent();
+// svc.eventOn("ve-mouseover", (event: SimpleEventType) => {
+//   console.log(event);
+// });
+
+rect.eventOn("ve-mouseover", (event: SimpleEventType) => {
+  const style = rect.getStyle();
+  style.fillStyle = "red";
+  rect.update("style", style);
+});
+
+rect.eventOn("ve-mouseout", (event: SimpleEventType) => {
+  const style = rect.getStyle();
+  style.fillStyle = "#2E8B57";
+  rect.update("style", style);
 });
 
 setTimeout(() => {
@@ -83,8 +95,8 @@ setTimeout(() => {
   // transformer.update("rotate", 45);
   // transformer.transformTarget({ x: 270, y: 90 }, 4);
   // console.log(text);
-  console.log(transformer);
-  transformer.transformTarget({ x: 300, y: 90 }, 5);
+  // console.log(transformer);
+  // transformer.transformTarget({ x: 300, y: 90 }, 5);
   // console.log(text);
   // console.log(transformer);
   // transformer.transformTarget({ x: 350, y: 90 }, 5);

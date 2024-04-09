@@ -2,7 +2,7 @@ import { Point } from "../common/MathUtils";
 import { SimpleHashList } from "../common/SimpleHashList";
 import { BaseContainer, V_CONTAINER_TYPE } from "./BaseContainer";
 import { Canvas } from "./Canvas";
-import { VERBAL_EVENT_TYPE } from "./EventMapping";
+import { INNER_EVENT_TYPE } from "./EventMapping";
 import { VerbalObject } from "./VerbalObject";
 import { BasePainter, IPainter } from "./Painter";
 
@@ -148,13 +148,10 @@ export class VerbalLayer extends BaseContainer {
   }
 
   private bindRequestUpdateEvent(obj: VerbalObject) {
-    obj.eventOn(
-      VERBAL_EVENT_TYPE._VE_REQUEST_UPDATE,
-      this.requestUpdateHandler
-    );
+    obj.eventOn(INNER_EVENT_TYPE._VE_REQUEST_UPDATE, this.requestUpdateHandler);
   }
 
   private removeRequestUpdateEvent(obj: VerbalObject) {
-    obj.eventOff(VERBAL_EVENT_TYPE._VE_REQUEST_UPDATE);
+    obj.eventOff(INNER_EVENT_TYPE._VE_REQUEST_UPDATE);
   }
 }
