@@ -5,7 +5,7 @@ import { Polygon } from "../widgets/Polygon";
 import { Rect } from "../widgets/Rect";
 import { Canvas } from "./Canvas";
 import {
-  EventController,
+  MouseEventFunctionType,
   bindEventMapping,
   unbindEventMapping,
 } from "./EventMapping";
@@ -26,14 +26,10 @@ export function staticVerbalCanvas(
 
 export class StaticVerbalCanvas {
   private verbalLayer: VerbalLayer;
-  private eventMapping: Record<string, (event: MouseEvent) => void> | null =
-    null;
-  private eventController: EventController | null = null;
+  private eventMapping: Record<string, MouseEventFunctionType> | null = null;
 
   constructor(verbalLayer: VerbalLayer) {
     this.verbalLayer = verbalLayer;
-    this.eventController = new EventController(verbalLayer);
-    // this.eventController.bindEventMapping();
   }
 
   place(...objs: VerbalObject[]) {
@@ -45,6 +41,7 @@ export class StaticVerbalCanvas {
   }
 
   startEvent() {
+    if (this.eventMapping) return;
     this.eventMapping = bindEventMapping(this.verbalLayer);
   }
 
