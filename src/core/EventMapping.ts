@@ -175,52 +175,108 @@ export class EventController {
   };
 }
 
-/**
- * 绑定事件映射器，将浏览器的基本鼠标事件映射到canvas画布上
- * @param verbal
- */
-export function bindEventMapping(verbal: VerbalLayer) {
+export function createInnerHandler(verbal: VerbalLayer) {
   const cacheMousePoint = { x: 0, y: 0 }; // 缓存鼠标坐标点
   const cacheEventObject: SimpleEventType = {
     veEventName: "",
-    target: verbal,
-    currentTarget: verbal,
+    target: null,
+    currentTarget: null,
     hostMouseEvent: null,
     timeStamp: 0,
   }; // 缓存事件对象
-  const handler = (hostMouseEvent: MouseEvent, veEventName: string) => {
+  let cacheOverWidget: VerbalObject | null = null;
+  const commonInnerHandler = (
+    hostMouseEvent: MouseEvent,
+    veEventName: string
+  ) => {
     cacheMousePoint.x = hostMouseEvent.offsetX; // 每次都赋值而不是创建新的对象
     cacheMousePoint.y = hostMouseEvent.offsetY;
     const widget = verbal.isPointInOneObject(cacheMousePoint);
     cacheEventObject.veEventName = veEventName;
     cacheEventObject.hostMouseEvent = hostMouseEvent;
-    if (widget) {
-      cacheEventObject.target = widget;
-      let flag: VerbalObject | null = widget;
-      while (flag) {
-        cacheEventObject.currentTarget = flag;
-        flag.eventRun(veEventName, cacheEventObject);
-        flag = flag.getParent();
-      }
-    } else {
+    if (!widget) {
       if (!verbal.hasEvent(veEventName)) return;
       cacheEventObject.target = verbal;
       cacheEventObject.currentTarget = verbal;
       verbal.eventRun(veEventName, cacheEventObject);
+      return;
+    }
+    cacheEventObject.target = widget;
+    let flag: VerbalObject | null = widget;
+    while (flag) {
+      cacheEventObject.currentTarget = flag;
+      flag.eventRun(veEventName, cacheEventObject);
+      flag = flag.getParent();
     }
   };
+
+  const mouseMoveHandler = (
+    hostMouseEvent: MouseEvent,
+    veEventName: string
+  ) => {
+    cacheMousePoint.x = hostMouseEvent.offsetX; // 每次都赋值而不是创建新的对象
+    cacheMousePoint.y = hostMouseEvent.offsetY;
+    const widget = verbal.isPointInOneObject(cacheMousePoint);
+    cacheEventObject.hostMouseEvent = hostMouseEvent;
+    if (!widget) {
+      if (cacheOverWidget) {
+        // 说明要出发out事件
+        cacheEventObject.veEventName = INNER_EVENT_TYPE.VE_MOUSEOUT;
+        let flag: VerbalObject | null = cacheOverWidget;
+        while (flag) {
+          cacheEventObject.currentTarget = flag;
+          flag.eventRun(INNER_EVENT_TYPE.VE_MOUSEOUT, cacheEventObject);
+          flag = flag.getParent();
+        }
+        cacheOverWidget = null;
+      }
+      if (!verbal.hasEvent(veEventName)) return;
+      cacheEventObject.target = verbal;
+      cacheEventObject.currentTarget = verbal;
+      verbal.eventRun(veEventName, cacheEventObject);
+      return;
+    }
+    cacheEventObject.target = widget;
+    let flag: VerbalObject | null = widget;
+    if (!cacheOverWidget) {
+      // 说明要出发over事件
+      cacheEventObject.veEventName = INNER_EVENT_TYPE.VE_MOUSEOVER;
+      while (flag) {
+        cacheEventObject.currentTarget = flag;
+        flag.eventRun(INNER_EVENT_TYPE.VE_MOUSEOVER, cacheEventObject);
+        flag = flag.getParent();
+      }
+      cacheOverWidget = widget;
+    }
+    flag = widget;
+    cacheEventObject.veEventName = INNER_EVENT_TYPE.VE_MOUSEMOVE;
+    while (flag) {
+      cacheEventObject.currentTarget = flag;
+      flag.eventRun(veEventName, cacheEventObject);
+      flag = flag.getParent();
+    }
+  };
+  return [commonInnerHandler, mouseMoveHandler];
+}
+
+/**
+ * 绑定事件映射器，将浏览器的基本鼠标事件映射到canvas画布上
+ * @param verbal
+ */
+export function bindEventMapping(verbal: VerbalLayer) {
+  const [commonInnerHandler, mouseMoveHandler] = createInnerHandler(verbal);
   const eventMapping = {
     click: (event: MouseEvent) => {
-      handler(event, INNER_EVENT_TYPE.VE_CLICK);
+      commonInnerHandler(event, INNER_EVENT_TYPE.VE_CLICK);
     },
     mousedown: (event: MouseEvent) => {
-      handler(event, INNER_EVENT_TYPE.VE_MOUSEDOWN);
+      commonInnerHandler(event, INNER_EVENT_TYPE.VE_MOUSEDOWN);
     },
     mouseup: (event: MouseEvent) => {
-      handler(event, INNER_EVENT_TYPE.VE_MOUSEUP);
+      commonInnerHandler(event, INNER_EVENT_TYPE.VE_MOUSEUP);
     },
     mousemove: (event: MouseEvent) => {
-      handler(event, INNER_EVENT_TYPE.VE_MOUSEMOVE);
+      mouseMoveHandler(event, INNER_EVENT_TYPE.VE_MOUSEMOVE);
     },
   };
   const targetDom = verbal.getCanvasDom();
