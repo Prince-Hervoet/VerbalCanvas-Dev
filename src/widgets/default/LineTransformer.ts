@@ -1,7 +1,7 @@
 import { CAL_TEMP_3, Point, isPointInCircle } from "../../common/MathUtils";
 import { isPlainObject } from "../../common/Utils";
 import { BaseWidget } from "../../core/BaseWidget";
-import { IPainter } from "../../core/Painter";
+import { Painter } from "../../core/Painter";
 import { VerbalObject } from "../../core/VerbalObject";
 
 export class LineTransformer extends BaseWidget {
@@ -43,7 +43,7 @@ export class LineTransformer extends BaseWidget {
     this.updateLineTransformerFields();
   }
 
-  protected _render(painter: IPainter): void {
+  protected _render(painter: Painter): void {
     const ctx = painter.getContext();
     ctx.beginPath();
     ctx.arc(0, 0, this.circleRadius, 0, CAL_TEMP_3);

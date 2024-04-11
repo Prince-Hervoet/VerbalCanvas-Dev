@@ -18,7 +18,7 @@ import {
   SimpleEventType,
   INNER_EVENT_TYPE,
 } from "./EventMapping";
-import { IPainter } from "./Painter";
+import { Painter } from "./Painter";
 
 export interface ITransformData {
   scaleX: number;
@@ -135,14 +135,14 @@ export abstract class VerbalObject implements IEventHandler {
    * 子类自己实现的渲染方法
    * @param painter
    */
-  protected _render(painter: IPainter) {}
+  protected _render(painter: Painter) {}
 
   /**
    * 统一渲染调用函数
    * @param painter
    * @returns
    */
-  render(painter: IPainter) {
+  render(painter: Painter) {
     if ((this.width === 0 && this.height === 0) || !this.visible) return;
     const ctx = painter.getContext();
     ctx.save();

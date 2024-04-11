@@ -1,7 +1,7 @@
 import { Point, isPointInPolygon } from "../common/MathUtils";
 import { createCanvasDom, hasProperty, setAttrIfExist } from "../common/Utils";
 import { BaseWidget } from "../core/BaseWidget";
-import { IPainter } from "../core/Painter";
+import { Painter } from "../core/Painter";
 import { VerbalObject } from "../core/VerbalObject";
 
 export class Text extends BaseWidget {
@@ -36,7 +36,7 @@ export class Text extends BaseWidget {
     if (hasProperty(newValue, "text")) this.updateTextFields();
   }
 
-  protected _render(painter: IPainter): void {
+  protected _render(painter: Painter): void {
     const ctx = painter.getContext();
     ctx.textBaseline = "top";
     ctx.fillText(this.text, 0, 0);

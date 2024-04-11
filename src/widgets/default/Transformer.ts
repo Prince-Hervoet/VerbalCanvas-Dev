@@ -14,7 +14,7 @@ import {
 } from "../../common/MathUtils";
 import { hasProperty, isPlainObject } from "../../common/Utils";
 import { BaseWidget } from "../../core/BaseWidget";
-import { IPainter } from "../../core/Painter";
+import { Painter } from "../../core/Painter";
 import { VerbalObject } from "../../core/VerbalObject";
 
 enum ControlPointNames {
@@ -125,7 +125,7 @@ export class Transformer extends BaseWidget {
     return -1;
   }
 
-  protected _render(painter: IPainter): void {
+  protected _render(painter: Painter): void {
     const ctx = painter.getContext();
     ctx.strokeRect(0, 0, this.width, this.height);
     for (let i = 0; i < this.vertices.length; ++i) {

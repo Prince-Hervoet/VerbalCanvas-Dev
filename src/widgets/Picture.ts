@@ -1,7 +1,7 @@
 import { Point, isPointInPolygon } from "../common/MathUtils";
 import { setAttrIfExist } from "../common/Utils";
 import { BaseWidget, V_WIDGET_TYPE } from "../core/BaseWidget";
-import { IPainter } from "../core/Painter";
+import { Painter } from "../core/Painter";
 
 export class Picture extends BaseWidget {
   private src: string = "";
@@ -17,7 +17,7 @@ export class Picture extends BaseWidget {
     return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgStr);
   }
 
-  protected _render(painter: IPainter): void {
+  protected _render(painter: Painter): void {
     const ctx = painter.getContext();
     if (this.imageCache) {
       ctx.drawImage(this.imageCache, 0, 0, this.width, this.height);

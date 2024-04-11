@@ -6,7 +6,7 @@ import { VerbalObject } from "./VerbalObject";
 /**
  * 绘制器接口
  */
-export interface IPainter {
+export interface Painter {
   getContext(): CanvasRenderingContext2D;
   draw(widget: VerbalObject): boolean;
 }
@@ -14,7 +14,7 @@ export interface IPainter {
 /**
  * 基础绘制器实现类
  */
-export class BasePainter implements IPainter {
+export class BasePainter implements Painter {
   private context: CanvasRenderingContext2D;
   private static sustainingTypes = ["rect", "ellipse", "polygon", "line"]; // 目前支持绘制的图形
 

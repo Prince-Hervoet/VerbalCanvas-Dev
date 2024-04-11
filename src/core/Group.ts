@@ -6,7 +6,7 @@ import {
 } from "../common/MathUtils";
 import { BaseContainer, V_CONTAINER_TYPE } from "./BaseContainer";
 import { VerbalObject } from "./VerbalObject";
-import { IPainter } from "./Painter";
+import { Painter } from "./Painter";
 
 export class Group extends BaseContainer {
   private members: Set<VerbalObject> = new Set();
@@ -81,7 +81,7 @@ export class Group extends BaseContainer {
     return ans;
   }
 
-  protected _render(painter: IPainter): void {
+  protected _render(painter: Painter): void {
     for (const member of this.members) {
       if (painter.draw(member)) continue;
       member.render(painter);

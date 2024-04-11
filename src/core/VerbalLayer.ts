@@ -4,16 +4,16 @@ import { BaseContainer, V_CONTAINER_TYPE } from "./BaseContainer";
 import { Canvas } from "./Canvas";
 import { INNER_EVENT_TYPE } from "./EventMapping";
 import { VerbalObject } from "./VerbalObject";
-import { BasePainter, IPainter } from "./Painter";
+import { BasePainter, Painter } from "./Painter";
 
 export class VerbalLayer extends BaseContainer {
   private canvas: Canvas;
-  private painter: IPainter;
+  private painter: Painter;
   private objectList: SimpleHashList<string, VerbalObject> =
     new SimpleHashList();
   private isRenderFlag: boolean = true;
 
-  constructor(canvas: Canvas, painter?: IPainter) {
+  constructor(canvas: Canvas, painter?: Painter) {
     super();
     this.canvas = canvas;
     if (painter) this.painter = painter;
