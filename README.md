@@ -1,2 +1,2 @@
 # VerbalCanvas-Dev
-This is a simple event response drawing library based on the native canvasAPI.
+This is a lightweight event response library based on the native canvas API. It is mainly used to convert native API into object-oriented mode, and adds element event binding function.

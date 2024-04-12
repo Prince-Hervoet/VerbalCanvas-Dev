@@ -65,6 +65,19 @@ export class VerbalLayer extends BaseContainer {
     if (has) this.layerRender();
   }
 
+  placeArray(objs: VerbalObject[]) {
+    let has = false;
+    for (const obj of objs) {
+      if (!obj) continue;
+      if (this.objectList.insertLast(obj.getObjectId(), obj)) {
+        has = true;
+        this.bindRequestUpdateEvent(obj);
+        obj.transfer(this);
+      }
+    }
+    if (has) this.layerRender();
+  }
+
   remove(...objs: VerbalObject[]): void {
     let has = false;
     for (const obj of objs) {

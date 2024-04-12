@@ -436,3 +436,9 @@ export function rotateVertices(
   }
   return ans;
 }
+
+export function generateRandomNumber(min: number, max: number): number {
+  // 生成min到max之间的随机数（包括min和max）
+  const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+  return randomNumber;
+}

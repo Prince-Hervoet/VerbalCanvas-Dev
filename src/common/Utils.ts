@@ -122,3 +122,21 @@ export function parseSvgPath(path: string) {
   }
   return commands;
 }
+
+function padStart(
+  input: string,
+  targetLength: number,
+  padString: string
+): string {
+  while (input.length < targetLength) {
+    input = padString + input;
+  }
+  return input;
+}
+
+export function generateRandomHexColor(): string {
+  // 生成随机的十六进制颜色值
+  const randomHex = Math.floor(Math.random() * 16777215).toString(16);
+  const hexColor = "#" + padStart(randomHex, 6, "0");
+  return hexColor;
+}

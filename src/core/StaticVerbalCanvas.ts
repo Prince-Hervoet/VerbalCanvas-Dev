@@ -36,6 +36,10 @@ export class StaticVerbalCanvas {
     this.verbalLayer.place(...objs);
   }
 
+  placeArray(objs: VerbalObject[]) {
+    this.verbalLayer.placeArray(objs);
+  }
+
   remove(...objs: VerbalObject[]) {
     this.verbalLayer.remove(...objs);
   }

@@ -1,6 +1,5 @@
 import { VerbalObject } from "./VerbalObject";
 import { VerbalLayer } from "./VerbalLayer";
-import { Canvas } from "./Canvas";
 
 /**
  * 内部事件类型
