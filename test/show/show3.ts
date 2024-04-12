@@ -3,8 +3,6 @@ import {
   StaticVerbalCanvas,
   staticVerbalCanvas,
 } from "../../src/core/StaticVerbalCanvas";
-import { VerbalObject } from "../../src/core/VerbalObject";
-import { Polygon } from "../../src/widgets/Polygon";
 import { Text } from "../../src/widgets/Text";
 import { Transformer } from "../../src/widgets/default/Transformer";
 
@@ -27,14 +25,9 @@ verbalCanvas.eventOn("ve-mousedown", (event: SimpleEventType) => {
         x: offsetX,
         y: offsetY,
       });
-      // console.log(index);
     } else {
       transformer.linkTo(target);
       verbalCanvas.place(transformer);
-      // setTimeout(() => {
-      //   transformer.transformTarget({ x: 50, y: 60 }, 4);
-      //   transformer.transformTarget({ x: 50, y: 60 }, 5);
-      // }, 2000);
     }
   } else {
     verbalCanvas.remove(transformer);
