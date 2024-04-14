@@ -71,23 +71,24 @@ const text = new Text({
 
 // const transformer = new Transformer({});
 // transformer.linkTo(rect);
-const ans = [];
-for (let i = 0; i < 100000; ++i) {
-  ans.push(
-    StaticVerbalCanvas.Rect({
-      x: generateRandomNumber(20, 600),
-      y: generateRandomNumber(20, 600),
-      width: 100,
-      height: 100,
-      style: {
-        fillStyle: generateRandomHexColor(),
-      },
-    })
-  );
-}
+// const ans = [];
+// for (let i = 0; i < 100000; ++i) {
+//   ans.push(
+//     StaticVerbalCanvas.Rect({
+//       x: generateRandomNumber(20, 600),
+//       y: generateRandomNumber(20, 600),
+//       width: 100,
+//       height: 100,
+//       style: {
+//         fillStyle: generateRandomHexColor(),
+//       },
+//     })
+//   );
+// }
+console.log(rect.cloneOne());
 
 const startTime = Date.now();
-svc.placeArray(ans);
+// svc.placeArray(ans);
 const endTime = Date.now();
 console.log("耗时: " + (endTime - startTime));
 svc.startEvent();

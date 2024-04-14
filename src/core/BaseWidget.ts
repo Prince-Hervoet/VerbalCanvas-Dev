@@ -1,4 +1,5 @@
 import { Point } from "../common/MathUtils";
+import { deepClone } from "../common/Utils";
 import { V_OBJECT_TYPE, VerbalObject } from "./VerbalObject";
 
 export const V_WIDGET_TYPE = {
@@ -23,11 +24,19 @@ export abstract class BaseWidget extends VerbalObject {
     this.vObjectType = V_OBJECT_TYPE.WIDGET;
   }
 
-  public getWidgetType() {
+  getWidgetType() {
     return this.widgetType;
   }
 
-  public getStyle() {
+  getStyle() {
     return this.style;
+  }
+
+  clone() {
+    const obj = this.toObject();
+    obj.widgetType = this.widgetType;
+    obj.isFixedLineWidth = this.isFixedLineWidth;
+    obj.vertices = deepClone(this.vertices);
+    obj.style = deepClone(this.style);
   }
 }

@@ -140,3 +140,25 @@ export function generateRandomHexColor(): string {
   const hexColor = "#" + padStart(randomHex, 6, "0");
   return hexColor;
 }
+
+export function deepClone(obj: any) {
+  if (obj === null || typeof obj !== "object") {
+    return obj;
+  }
+  // 处理数组的情况
+  if (Array.isArray(obj)) {
+    const clonedArray: any[] = [];
+    for (const item of obj) {
+      clonedArray.push(deepClone(item));
+    }
+    return clonedArray;
+  }
+  // 处理对象的情况
+  const clonedObj: { [key: string]: any } = {};
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      clonedObj[key] = deepClone(obj[key]);
+    }
+  }
+  return clonedObj;
+}

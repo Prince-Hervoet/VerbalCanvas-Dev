@@ -10,6 +10,8 @@ import {
   isNullOrUndefined,
   isAllNullOrUndefined,
   isPlainObject,
+  deepClone,
+  isObject,
 } from "../common/Utils";
 import { BaseContainer } from "./BaseContainer";
 import {
@@ -150,6 +152,31 @@ export abstract class VerbalObject implements IEventHandler {
     VerbalObject.setContextStyle(ctx, this);
     this._render(painter);
     ctx.restore();
+  }
+
+  /**
+   * 导出对象
+   * @returns
+   */
+  toObject(): Record<string, any> {
+    const ans: Record<string, any> = {};
+    const self: any = this;
+    for (const key in self) {
+      if (typeof self[key] === "function") continue;
+      if (isObject(self[key]) || Array.isArray(self[key])) {
+        if (key === "eventHandlers") continue;
+        ans[key] = deepClone(self[key]);
+      } else {
+        ans[key] = self[key];
+      }
+    }
+    return ans;
+  }
+
+  cloneOne(): Record<string, any> {
+    const obj = this.toObject();
+    obj.vObjectId = getNanoId();
+    return obj;
   }
 
   /**
