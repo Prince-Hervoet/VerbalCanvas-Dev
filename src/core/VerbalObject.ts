@@ -28,27 +28,33 @@ export interface ITransformData {
   rotate: number;
 }
 
+/**
+ * 对象所属类型分类
+ */
 export const V_OBJECT_TYPE = {
   WIDGET: "widget",
   CONTAINER: "container",
 };
 
+/**
+ * 总元素类
+ */
 export abstract class VerbalObject implements IEventHandler {
-  protected vObjectId: string = "";
-  protected vObjectType: string = "";
-  protected x: number = 0;
-  protected y: number = 0;
-  protected width: number = 0;
-  protected height: number = 0;
-  protected rotate: number = 0;
-  protected scaleX: number = 1;
-  protected scaleY: number = 1;
-  protected centerPoint: Point = { x: 0, y: 0 };
-  protected boundingBoxVertices: Point[] = [];
-  protected parent: BaseContainer | null = null;
-  protected visible: boolean = true;
-  protected isPointerEvent: boolean = true;
-  protected eventHandlers: EventHandlersType = {};
+  protected vObjectId: string = ""; // 元素id
+  protected vObjectType: string = ""; // 元素类型
+  protected x: number = 0; // left坐标
+  protected y: number = 0; // top坐标
+  protected width: number = 0; // 宽度
+  protected height: number = 0; // 高度
+  protected rotate: number = 0; // 旋转角度
+  protected scaleX: number = 1; // x轴缩放系数
+  protected scaleY: number = 1; // y轴缩放系数
+  protected centerPoint: Point = { x: 0, y: 0 }; // 中心点
+  protected boundingBoxVertices: Point[] = []; // 包围盒顶点数组
+  protected parent: BaseContainer | null = null; // 父元素引用
+  protected visible: boolean = true; // 是否可见
+  protected isPointerEvent: boolean = true; // 是否响应鼠标事件
+  protected eventHandlers: EventHandlersType = {}; // 事件处理函数对象
   protected static cacheEventObject: SimpleEventType = {
     veEventName: INNER_EVENT_TYPE._VE_REQUEST_UPDATE,
     target: null,
@@ -94,6 +100,10 @@ export abstract class VerbalObject implements IEventHandler {
     ctx.scale(obj.scaleX, obj.scaleY);
   }
 
+  /**
+   * 请求更新
+   * @param obj
+   */
   protected static requestUpdate(obj: VerbalObject) {
     VerbalObject.cacheEventObject.target = obj;
     VerbalObject.cacheEventObject.currentTarget = obj;
@@ -104,6 +114,10 @@ export abstract class VerbalObject implements IEventHandler {
     );
   }
 
+  /**
+   * 初始化字段
+   * @param fields
+   */
   protected _initFields(fields: Record<string, any>) {
     for (const key in fields) {
       (this as any)[key] = fields[key];
@@ -163,6 +177,10 @@ export abstract class VerbalObject implements IEventHandler {
     const self: any = this;
     for (const key in self) {
       if (typeof self[key] === "function") continue;
+      if (key === "parent") {
+        self[key] = null;
+        continue;
+      }
       if (isObject(self[key]) || Array.isArray(self[key])) {
         if (key === "eventHandlers") continue;
         ans[key] = deepClone(self[key]);
@@ -244,6 +262,11 @@ export abstract class VerbalObject implements IEventHandler {
     VerbalObject.requestUpdate(this);
   }
 
+  /**
+   * 自定义更新逻辑
+   * @param newValue
+   * @param oldValue
+   */
   protected _update(
     newValue: Record<string, any>,
     oldValue: Record<string, any>
