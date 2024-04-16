@@ -75,6 +75,30 @@ export class SimpleHashList<K, V> {
     return true;
   }
 
+  public insertAt(key: K, value: V, index: number) {
+    if (index < 0 || index > this.keyToNode.size) return;
+    if (this.keyToNode.has(key)) return;
+    if (index === 0) {
+      return this.insertFirst(key, value);
+    } else if (index === this.keyToNode.size) {
+      return this.insertLast(key, value);
+    }
+    let flag = this.head;
+    for (let i = 0; i < index - 1; ++i) {
+      flag = flag!.getNext();
+    }
+    if (!flag) return false;
+    const prevNode = flag;
+    const nextNode = flag.getNext();
+    const nNode = new SimpleListNode(key, value);
+    prevNode.next = nNode;
+    nNode.prev = prevNode;
+    nNode.next = nextNode;
+    nextNode!.prev = nNode;
+    this.keyToNode.set(key, nNode);
+    return true;
+  }
+
   public remove(key: K) {
     const node = this.keyToNode.get(key);
     if (!node) return false;

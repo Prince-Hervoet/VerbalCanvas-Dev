@@ -162,6 +162,18 @@ export class VerbalLayer extends BaseContainer {
   }
 
   /**
+   * 更改元素层级
+   * @param obj
+   * @param index
+   * @returns
+   */
+  changeObjectIndex(obj: VerbalObject, index: number) {
+    if (!this.contains(obj)) return;
+    this.objectList.remove(obj.getObjectId());
+    this.objectList.insertAt(obj.getObjectId(), obj, index);
+  }
+
+  /**
    * 批量更新处理函数
    * @param event
    * @returns
