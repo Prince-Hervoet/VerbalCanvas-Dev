@@ -32,6 +32,14 @@ export class StaticVerbalCanvas {
     this.verbalLayer = verbalLayer;
   }
 
+  getCanvasDom() {
+    return this.verbalLayer.getCanvasDom();
+  }
+
+  getCanvasContext() {
+    return this.verbalLayer.getCanvasContext();
+  }
+
   place(...objs: VerbalObject[]) {
     this.verbalLayer.place(...objs);
   }
@@ -42,6 +50,14 @@ export class StaticVerbalCanvas {
 
   remove(...objs: VerbalObject[]) {
     this.verbalLayer.remove(...objs);
+  }
+
+  contains(obj: VerbalObject): boolean {
+    return this.verbalLayer.contains(obj);
+  }
+
+  size() {
+    return this.verbalLayer.size();
   }
 
   startEvent() {

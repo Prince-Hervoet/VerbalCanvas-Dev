@@ -42,6 +42,13 @@ export class VerbalLayer extends BaseContainer {
     return this.canvas.getCanvasDom();
   }
 
+  getCanvasContext() {
+    return this.canvas.getContext();
+  }
+
+  /**
+   * 渲染函数
+   */
   layerRender(): void {
     this.erasure();
     let flag = this.objectList.getHead();
@@ -52,6 +59,10 @@ export class VerbalLayer extends BaseContainer {
     }
   }
 
+  /**
+   * 放置元素到画布上
+   * @param objs
+   */
   place(...objs: VerbalObject[]): void {
     let has = false;
     for (const obj of objs) {
@@ -65,6 +76,10 @@ export class VerbalLayer extends BaseContainer {
     if (has) this.layerRender();
   }
 
+  /**
+   * 放置一组元素到画布上
+   * @param objs
+   */
   placeArray(objs: VerbalObject[]) {
     let has = false;
     for (const obj of objs) {
@@ -78,6 +93,10 @@ export class VerbalLayer extends BaseContainer {
     if (has) this.layerRender();
   }
 
+  /**
+   * 从画布上移除元素
+   * @param objs
+   */
   remove(...objs: VerbalObject[]): void {
     let has = false;
     for (const obj of objs) {
@@ -91,6 +110,11 @@ export class VerbalLayer extends BaseContainer {
     if (has) this.layerRender();
   }
 
+  /**
+   * 判断是否包含某个元素
+   * @param obj
+   * @returns
+   */
   contains(obj: VerbalObject): boolean {
     return this.objectList.contains(obj.getObjectId());
   }
@@ -116,7 +140,7 @@ export class VerbalLayer extends BaseContainer {
   /**
    * 清空画布，不会清空list
    */
-  public erasure() {
+  erasure() {
     const ctx = this.canvas.getContext();
     ctx.clearRect(0, 0, this.canvas.getWidth(), this.canvas.getHeight());
   }
@@ -124,9 +148,17 @@ export class VerbalLayer extends BaseContainer {
   /**
    * 清空list
    */
-  public clear() {
+  clear() {
     this.erasure();
     this.objectList.clear();
+  }
+
+  /**
+   * 获取元素数量
+   * @returns
+   */
+  size(): number {
+    return this.objectList.getSize();
   }
 
   /**
