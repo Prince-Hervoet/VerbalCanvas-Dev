@@ -44,6 +44,11 @@ export type EventHandlersType = {
 
 export type MouseEventFunctionType = (event: MouseEvent) => void;
 
+/**
+ * 创建事件映射处理器
+ * @param verbal
+ * @returns
+ */
 export function createInnerHandler(verbal: VerbalLayer) {
   const cacheMousePoint = { x: 0, y: 0 }; // 缓存鼠标坐标点
   const cacheEventObject: SimpleEventType = {

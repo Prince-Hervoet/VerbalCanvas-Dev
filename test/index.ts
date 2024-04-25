@@ -85,7 +85,7 @@ const text = new Text({
 //     })
 //   );
 // }
-console.log(rect.cloneOne());
+console.log(rect.toObject());
 
 const startTime = Date.now();
 // svc.placeArray(ans);
@@ -102,11 +102,11 @@ svc.eventOn("ve-mouseover", (event: SimpleEventType) => {
 //   rect.update("style", style);
 // });
 
-// rect.eventOn("ve-mouseout", (event: SimpleEventType) => {
-//   const style = rect.getStyle();
-//   style.fillStyle = "#2E8B57";
-//   rect.update("style", style);
-// });
+rect.eventOn("ve-mouseout", (event: SimpleEventType) => {
+  const style = rect.getStyle();
+  style.fillStyle = "#2E8B57";
+  rect.update("style", style);
+});
 
 setTimeout(() => {
   // debugger;

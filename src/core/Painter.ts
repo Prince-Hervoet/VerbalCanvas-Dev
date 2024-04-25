@@ -1,5 +1,5 @@
 import { degreesToRadians } from "../common/MathUtils";
-import { getCtxTransformSclae, recoverContextScale } from "../common/Utils";
+import { getCtxTransformScale, recoverContextScale } from "../common/Utils";
 import { BaseWidget } from "./BaseWidget";
 import { VerbalObject } from "./VerbalObject";
 
@@ -39,13 +39,13 @@ export class BasePainter implements Painter {
     if (style.fillStyle) this.context.fill();
     if (style.strokeStyle) {
       if (isFixedLineWidth) {
-        const [scaleX, scaleY] = getCtxTransformSclae(this.context);
+        const [finalScaleX, finalScaleY] = getCtxTransformScale(this.context);
         recoverContextScale(this.context);
         this.setContextPath(
           widget,
           widgetType,
-          widget.getWidth() * scaleX,
-          widget.getHeight() * scaleY
+          widget.getWidth() * finalScaleX,
+          widget.getHeight() * finalScaleY
         );
       }
       this.context.stroke();

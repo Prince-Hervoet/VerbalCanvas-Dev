@@ -97,7 +97,7 @@ export function recoverContextScale(ctx: CanvasRenderingContext2D) {
  * @param ctx
  * @returns
  */
-export function getCtxTransformSclae(ctx: CanvasRenderingContext2D) {
+export function getCtxTransformScale(ctx: CanvasRenderingContext2D) {
   const current = ctx.getTransform();
   const { a, b, d } = current;
   const rotateRad = Math.atan2(b, a);
