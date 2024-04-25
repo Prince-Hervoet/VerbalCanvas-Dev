@@ -25,8 +25,11 @@ const rect = StaticVerbalCanvas.Rect({
   y: 100,
   width: 200,
   height: 200,
+  isFixedLineWidth: true,
   style: {
     fillStyle: "#2E8B57",
+    strokeStyle: "blue",
+    lineWidth: 6,
   },
 });
 
@@ -85,10 +88,8 @@ const text = new Text({
 //     })
 //   );
 // }
-console.log(rect.toObject());
-
+svc.place(rect);
 const startTime = Date.now();
-// svc.placeArray(ans);
 const endTime = Date.now();
 console.log("耗时: " + (endTime - startTime));
 svc.startEvent();
@@ -109,17 +110,5 @@ rect.eventOn("ve-mouseout", (event: SimpleEventType) => {
 });
 
 setTimeout(() => {
-  // debugger;
-  // rect.update("rotate", 45);
-  // rect.update("scaleX", 1.3);
-  // transformer.update("rotate", 45);
-  // transformer.transformTarget({ x: 270, y: 90 }, 4);
-  // console.log(text);
-  // console.log(transformer);
-  // transformer.transformTarget({ x: 300, y: 90 }, 5);
-  // console.log(text);
-  // console.log(transformer);
-  // transformer.transformTarget({ x: 350, y: 90 }, 5);
-  // console.log(text);
-  // console.log(transformer);
+  rect.update("scaleX", 2);
 }, 2000);
