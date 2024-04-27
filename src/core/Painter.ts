@@ -1,4 +1,4 @@
-import { degreesToRadians } from "../common/MathUtils";
+import { Point, degreesToRadians } from "../common/MathUtils";
 import { getCtxTransformScale, recoverContextScale } from "../common/Utils";
 import { BaseWidget } from "./BaseWidget";
 import { VerbalObject } from "./VerbalObject";
@@ -7,7 +7,15 @@ import { VerbalObject } from "./VerbalObject";
  * 绘制器接口
  */
 export interface Painter {
+  /**
+   * 获取canvas上下文
+   */
   getContext(): CanvasRenderingContext2D;
+
+  /**
+   * 绘制方法
+   * @param widget
+   */
   draw(widget: VerbalObject): boolean;
 }
 
@@ -16,6 +24,7 @@ export interface Painter {
  */
 export class BasePainter implements Painter {
   private context: CanvasRenderingContext2D;
+  private defaultStartPoint: Point = { x: 0, y: 0 };
   private static sustainingTypes = ["rect", "ellipse", "polygon", "line"]; // 目前支持绘制的图形
 
   constructor(ctx: CanvasRenderingContext2D) {
@@ -38,20 +47,26 @@ export class BasePainter implements Painter {
     this.setContextPath(widget, widgetType);
     if (style.fillStyle) this.context.fill();
     if (style.strokeStyle) {
-      if (isFixedLineWidth) {
-        const [finalScaleX, finalScaleY] = getCtxTransformScale(this.context);
-        recoverContextScale(this.context);
-        this.setContextPath(
-          widget,
-          widgetType,
-          widget.getWidth() * finalScaleX,
-          widget.getHeight() * finalScaleY
-        );
-      }
+      if (isFixedLineWidth) this.handleFixedLineWidth(widget);
       this.context.stroke();
     }
     this.context.restore();
     return true;
+  }
+
+  /**
+   * 处理线宽固定问题
+   * @param widget
+   */
+  private handleFixedLineWidth(widget: VerbalObject) {
+    const [finalScaleX, finalScaleY] = getCtxTransformScale(this.context);
+    recoverContextScale(this.context);
+    this.setContextPath(
+      widget,
+      widget.getAttr("widgetType"),
+      widget.getWidth() * finalScaleX,
+      widget.getHeight() * finalScaleY
+    );
   }
 
   /**
@@ -73,7 +88,13 @@ export class BasePainter implements Painter {
       case "rect":
         const cornerRadius = widget.getAttr("cornerRadius");
         this.context.beginPath();
-        this.context.roundRect(0, 0, finalWidth, finalHeight, cornerRadius);
+        this.context.roundRect(
+          this.defaultStartPoint.x,
+          this.defaultStartPoint.y,
+          finalWidth,
+          finalHeight,
+          cornerRadius
+        );
         this.context.closePath();
         break;
       case "ellipse":
@@ -85,8 +106,8 @@ export class BasePainter implements Painter {
           ellipseRadiusY,
           ellipseRadiusX,
           ellipseRadiusY,
-          0,
-          0,
+          this.defaultStartPoint.x,
+          this.defaultStartPoint.y,
           Math.PI * 2
         );
         break;
@@ -100,7 +121,7 @@ export class BasePainter implements Painter {
         break;
       case "line":
         this.context.beginPath();
-        this.context.moveTo(0, 0);
+        this.context.moveTo(this.defaultStartPoint.x, this.defaultStartPoint.y);
         this.context.lineTo(finalWidth, finalHeight);
         break;
       default:
