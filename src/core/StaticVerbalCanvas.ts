@@ -40,6 +40,10 @@ export class StaticVerbalCanvas {
     return this.verbalLayer.getCanvasContext();
   }
 
+  generateImageUrl(x: number, y: number, width: number, height: number) {
+    return this.verbalLayer.generateCanvasImageUrl(x, y, width, height);
+  }
+
   place(...objs: VerbalObject[]) {
     this.verbalLayer.place(...objs);
   }

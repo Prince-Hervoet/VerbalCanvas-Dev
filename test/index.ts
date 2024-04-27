@@ -110,5 +110,7 @@ rect.eventOn("ve-mouseout", (event: SimpleEventType) => {
 });
 
 setTimeout(() => {
-  rect.update("scaleX", 2);
+  // rect.update("scaleX", 2);
+  const a = svc.generateImageUrl(0, 0, 300, 300);
+  console.log(a);
 }, 2000);

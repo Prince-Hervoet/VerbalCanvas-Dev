@@ -174,6 +174,31 @@ export class VerbalLayer extends BaseContainer {
   }
 
   /**
+   * 根据区域生成图片
+   * @param x
+   * @param y
+   * @param width
+   * @param height
+   */
+  generateCanvasImageUrl(
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ): string {
+    if (width === 0 || height === 0) return "";
+    const tempCanvas = document.createElement("canvas");
+    const tempCtx = tempCanvas.getContext("2d")!;
+    const imageData = this.canvas
+      .getContext()
+      .getImageData(x, y, width, height);
+    tempCanvas.width = width;
+    tempCanvas.height = height;
+    tempCtx.putImageData(imageData, 0, 0);
+    return tempCanvas.toDataURL("image/png", 1);
+  }
+
+  /**
    * 批量更新处理函数
    * @param event
    * @returns
