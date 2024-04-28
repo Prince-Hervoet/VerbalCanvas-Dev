@@ -255,6 +255,10 @@ export abstract class VerbalObject implements IEventHandler {
     VerbalObject.requestUpdate(this);
   }
 
+  requestUpdate() {
+    VerbalObject.requestUpdate(this);
+  }
+
   simplelyMoveCalFields(x: number, y: number) {
     this.x = x;
     this.y = y;
@@ -354,21 +358,6 @@ export abstract class VerbalObject implements IEventHandler {
     ) {
       this._fixUpdateCenterPoint();
       this._updateBoundingBoxVertices();
-      // const halfFinalWidth = (this.width * this.scaleX) / 2;
-      // const halfFinalHeight = (this.height * this.scaleY) / 2;
-      // const nCenterPoint = {
-      //   x: this.x + halfFinalWidth,
-      //   y: this.y + halfFinalHeight,
-      // };
-      // this.centerPoint = rotatePoint(
-      //   nCenterPoint,
-      //   this.centerPoint,
-      //   this.rotate
-      // );
-      // this.x = this.centerPoint.x - halfFinalWidth;
-      // this.y = this.centerPoint.y - halfFinalHeight;
-      //   this._updateVertices();
-      //   this._rotateVertices();
     }
   }
 
@@ -455,7 +444,7 @@ export abstract class VerbalObject implements IEventHandler {
    */
   transfer(nContainer: BaseContainer | null) {
     if (nContainer === this.parent) return;
-    if (this.parent) this.parent.remove(this);
+    if (this.parent && nContainer) this.parent.remove(this);
     this.parent = nContainer;
   }
 

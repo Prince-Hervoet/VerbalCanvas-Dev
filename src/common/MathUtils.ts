@@ -442,3 +442,11 @@ export function generateRandomNumber(min: number, max: number): number {
   const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
   return randomNumber;
 }
+
+export function centerPointToXAndY(
+  centerPoint: Point,
+  width: number,
+  height: number
+) {
+  return [centerPoint.x - width / 2, centerPoint.y - height / 2];
+}

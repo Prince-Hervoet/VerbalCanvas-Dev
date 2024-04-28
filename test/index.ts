@@ -1,3 +1,4 @@
+import { isObjectLiteralElementLike } from "typescript";
 import { generateRandomNumber } from "../src/common/MathUtils";
 import { generateRandomHexColor, parseSvgPath } from "../src/common/Utils";
 import { SimpleEventType } from "../src/core/EventMapping";
@@ -25,6 +26,7 @@ const rect = StaticVerbalCanvas.Rect({
   y: 100,
   width: 200,
   height: 200,
+  // rotate: 20,
   isFixedLineWidth: true,
   style: {
     fillStyle: "#2E8B57",
@@ -88,7 +90,9 @@ const text = new Text({
 //     })
 //   );
 // }
-svc.place(rect);
+const group = new Group();
+group.place(rect, ellipse);
+svc.place(group);
 const startTime = Date.now();
 const endTime = Date.now();
 console.log("耗时: " + (endTime - startTime));
@@ -110,7 +114,9 @@ rect.eventOn("ve-mouseout", (event: SimpleEventType) => {
 });
 
 setTimeout(() => {
-  // rect.update("scaleX", 2);
-  const a = svc.generateImageUrl(0, 0, 300, 300);
-  console.log(a);
-}, 2000);
+  group.update("rotate", 45);
+  setTimeout(() => {
+    group.remove(ellipse);
+    // svc.place(ellipse);
+  }, 1000);
+}, 1500);
