@@ -10,6 +10,7 @@ import {
 import { Picture } from "../src/widgets/Picture";
 import { Text } from "../src/widgets/Text";
 import { Transformer } from "../src/widgets/default/Transformer";
+import { MultipleSelectList } from "../src/core/MultipleSelectList";
 
 const container = document.getElementById("main")!;
 const canvasDom = document.getElementById("canvas")! as HTMLCanvasElement;
@@ -26,11 +27,23 @@ const rect = StaticVerbalCanvas.Rect({
   y: 100,
   width: 200,
   height: 200,
-  // rotate: 20,
   isFixedLineWidth: true,
   style: {
     fillStyle: "#2E8B57",
     strokeStyle: "blue",
+    lineWidth: 6,
+  },
+});
+
+const rect2 = StaticVerbalCanvas.Rect({
+  x: 300,
+  y: 300,
+  width: 200,
+  height: 200,
+  isFixedLineWidth: true,
+  style: {
+    fillStyle: "#eccc68",
+    strokeStyle: "green",
     lineWidth: 6,
   },
 });
@@ -90,16 +103,22 @@ const text = new Text({
 //     })
 //   );
 // }
-const group = new Group();
-group.place(rect, ellipse);
-svc.place(group);
-const startTime = Date.now();
-const endTime = Date.now();
-console.log("耗时: " + (endTime - startTime));
-svc.startEvent();
-svc.eventOn("ve-mouseover", (event: SimpleEventType) => {
-  console.log(event);
-});
+// const group = new Group();
+// group.place();
+svc.place(rect, ellipse, rect2);
+const testMultipleSelectList = new MultipleSelectList();
+svc.place(testMultipleSelectList);
+testMultipleSelectList.place(rect, rect2);
+
+console.log(testMultipleSelectList);
+
+// const startTime = Date.now();
+// const endTime = Date.now();
+// console.log("耗时: " + (endTime - startTime));
+// svc.startEvent();
+// svc.eventOn("ve-mouseover", (event: SimpleEventType) => {
+//   console.log(event);
+// });
 
 // rect.eventOn("ve-mouseover", (event: SimpleEventType) => {
 //   const style = rect.getStyle();
@@ -114,9 +133,5 @@ rect.eventOn("ve-mouseout", (event: SimpleEventType) => {
 });
 
 setTimeout(() => {
-  group.update("rotate", 45);
-  setTimeout(() => {
-    group.remove(ellipse);
-    // svc.place(ellipse);
-  }, 1000);
+  testMultipleSelectList.update("rotate", 50);
 }, 1500);

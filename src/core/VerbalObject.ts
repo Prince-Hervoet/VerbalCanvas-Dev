@@ -49,6 +49,7 @@ export abstract class VerbalObject implements IEventHandler {
   protected rotate: number = 0; // 旋转角度
   protected scaleX: number = 1; // x轴缩放系数
   protected scaleY: number = 1; // y轴缩放系数
+  protected preTransformObj: VerbalObject | null = null;
   protected centerPoint: Point = { x: 0, y: 0 }; // 中心点
   protected boundingBoxVertices: Point[] = []; // 包围盒顶点数组
   protected parent: BaseContainer | null = null; // 父元素引用
@@ -162,6 +163,8 @@ export abstract class VerbalObject implements IEventHandler {
     if ((this.width === 0 && this.height === 0) || !this.visible) return;
     const ctx = painter.getContext();
     ctx.save();
+    if (this.preTransformObj)
+      VerbalObject.setContextTransform(ctx, this.preTransformObj);
     VerbalObject.setContextTransform(ctx, this);
     VerbalObject.setContextStyle(ctx, this);
     this._render(painter);

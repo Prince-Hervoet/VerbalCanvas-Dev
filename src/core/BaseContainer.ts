@@ -5,6 +5,7 @@ import { V_OBJECT_TYPE, VerbalObject } from "./VerbalObject";
  */
 export const V_CONTAINER_TYPE = {
   GROUP: "group",
+  MULTIPLE_SELECT_LIST: "multipleSelectList",
   VERBAL_LAYER: "verbalLayer",
 };
 
@@ -18,13 +19,24 @@ export abstract class BaseContainer extends VerbalObject {
    * 放置元素
    * @param obj
    */
-  abstract place(...obj: VerbalObject[]): void;
+  abstract place(...objs: VerbalObject[]): void;
+
+  /**
+   * 放置一列元素
+   * @param objs
+   */
+  abstract placeArray(objs: VerbalObject[]): void;
 
   /**
    * 移除元素
    * @param obj
    */
-  abstract remove(...obj: VerbalObject[]): void;
+  abstract remove(...objs: VerbalObject[]): void;
+
+  /**
+   * 清空
+   */
+  abstract clear(): void;
 
   /**
    * 是否包含某个元素
