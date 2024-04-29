@@ -31,7 +31,7 @@ const rect = StaticVerbalCanvas.Rect({
   style: {
     fillStyle: "#2E8B57",
     strokeStyle: "blue",
-    lineWidth: 6,
+    lineWidth: 50,
   },
 });
 

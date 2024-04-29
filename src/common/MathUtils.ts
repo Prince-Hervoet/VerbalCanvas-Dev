@@ -24,15 +24,15 @@ export interface Vector2 {
  * 控制点位
  */
 export enum CtrlCornerIndex {
-  TOP_LEFT,
-  TOP_RIGHT,
-  BOTTOM_RIGHT,
-  BOTTOM_LEFT,
-  ROTATE_POINT,
-  TOP_CENTER,
-  RIGHT_CENTER,
-  BOTTOM_CENTER,
-  LEFT_CENTER,
+  TOP_LEFT, // 左上角
+  TOP_RIGHT, // 右上角
+  BOTTOM_RIGHT, // 右下角
+  BOTTOM_LEFT, // 左下角
+  ROTATE_POINT, // 旋转点
+  TOP_CENTER, // 上中点
+  RIGHT_CENTER, // 右中点
+  BOTTOM_CENTER, // 下中点
+  LEFT_CENTER, // 左中点
 }
 
 export const ZeroOneVector2: Vector2 = {

@@ -1,6 +1,5 @@
-import { Point, degreesToRadians } from "../common/MathUtils";
+import { Point } from "../common/MathUtils";
 import { getCtxTransformScale, recoverContextScale } from "../common/Utils";
-import { BaseWidget } from "./BaseWidget";
 import { VerbalObject } from "./VerbalObject";
 
 /**
@@ -24,7 +23,7 @@ export interface Painter {
  */
 export class BasePainter implements Painter {
   private context: CanvasRenderingContext2D;
-  private defaultStartPoint: Point = { x: 0, y: 0 };
+  private defaultStartPoint: Point = { x: 0, y: 0 }; // 默认绘制左上角点
   private static sustainingTypes = ["rect", "ellipse", "polygon", "line"]; // 目前支持绘制的图形
 
   constructor(ctx: CanvasRenderingContext2D) {
@@ -44,6 +43,8 @@ export class BasePainter implements Painter {
     this.context.save();
     VerbalObject.setContextTransform(this.context, widget);
     VerbalObject.setContextStyle(this.context, widget);
+    if (style.strokeStyle)
+      this.handleStartWithLineWidth(this.context.lineWidth ?? 1);
     this.setContextPath(widget, widgetType);
     if (style.fillStyle) this.context.fill();
     if (style.strokeStyle) {
@@ -51,6 +52,8 @@ export class BasePainter implements Painter {
       this.context.stroke();
     }
     this.context.restore();
+    this.defaultStartPoint.x = 0;
+    this.defaultStartPoint.y = 0;
     return true;
   }
 
@@ -59,14 +62,25 @@ export class BasePainter implements Painter {
    * @param widget
    */
   private handleFixedLineWidth(widget: VerbalObject) {
+    const finalLineWidth = this.context.lineWidth ?? 1;
     const [finalScaleX, finalScaleY] = getCtxTransformScale(this.context);
     recoverContextScale(this.context);
     this.setContextPath(
       widget,
       widget.getAttr("widgetType"),
-      widget.getWidth() * finalScaleX,
-      widget.getHeight() * finalScaleY
+      widget.getWidth() * finalScaleX - finalLineWidth,
+      widget.getHeight() * finalScaleY - finalLineWidth
     );
+  }
+
+  /**
+   * 处理线宽导致的溢出问题
+   * @param finalLineWidth
+   */
+  private handleStartWithLineWidth(finalLineWidth: number) {
+    const temp = finalLineWidth / 2;
+    this.defaultStartPoint.x += temp;
+    this.defaultStartPoint.y += temp;
   }
 
   /**
@@ -82,8 +96,9 @@ export class BasePainter implements Painter {
     width?: number,
     height?: number
   ) {
-    const finalWidth = width ?? widget.getWidth();
-    const finalHeight = height ?? widget.getHeight();
+    const finalLineWidth = this.context.lineWidth ?? 1;
+    const finalWidth = width ?? widget.getWidth() - finalLineWidth;
+    const finalHeight = height ?? widget.getHeight() - finalLineWidth;
     switch (widgetType) {
       case "rect":
         const cornerRadius = widget.getAttr("cornerRadius");
