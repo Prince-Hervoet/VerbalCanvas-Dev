@@ -39,19 +39,22 @@ export class BasePainter implements Painter {
     const widgetType: string = widget.getAttr("widgetType");
     if (!BasePainter.sustainingTypes.includes(widgetType)) return false;
     const style = widget.getAttr("style");
-    const isFixedLineWidth = widget.getAttr("isFixedLineWidth");
     this.context.save();
-    VerbalObject.setContextTransform(this.context, widget);
-    VerbalObject.setContextStyle(this.context, widget);
+    VerbalObject.setContextTransform(this.context, widget); // 设置上下文变换
+    VerbalObject.setContextStyle(this.context, widget); // 设置上下文风格
     if (style.strokeStyle)
+      // 如果需要绘制描边，才需要根据线宽调整起始点
       this.handleStartWithLineWidth(this.context.lineWidth ?? 1);
     this.setContextPath(widget, widgetType);
     if (style.fillStyle) this.context.fill();
     if (style.strokeStyle) {
+      // 如果设置了线宽固定，才需要重新设置缩放系数
+      const isFixedLineWidth = widget.getAttr("isFixedLineWidth");
       if (isFixedLineWidth) this.handleFixedLineWidth(widget);
       this.context.stroke();
     }
     this.context.restore();
+    // 恢复起始点坐标
     this.defaultStartPoint.x = 0;
     this.defaultStartPoint.y = 0;
     return true;
@@ -63,8 +66,9 @@ export class BasePainter implements Painter {
    */
   private handleFixedLineWidth(widget: VerbalObject) {
     const finalLineWidth = this.context.lineWidth ?? 1;
-    const [finalScaleX, finalScaleY] = getCtxTransformScale(this.context);
+    const [finalScaleX, finalScaleY] = getCtxTransformScale(this.context); // 获取的scale值可能是经过多次变换叠加出来的
     recoverContextScale(this.context);
+    // 这里需要再定位一次路径
     this.setContextPath(
       widget,
       widget.getAttr("widgetType"),
