@@ -349,22 +349,22 @@ export function getMidPoint(p1: Point, p2: Point): Point {
 /**
  * 获取点到直线的距离
  * @param point
- * @param lineStart
- * @param lineEnd
+ * @param lineA
+ * @param lineB
  * @returns
  */
 export function getDistanceToLine(
   point: Point,
-  lineStart: Point,
-  lineEnd: Point
+  lineA: Point,
+  lineB: Point
 ): number {
-  const { x: x1, y: y1 } = lineStart;
-  const { x: x2, y: y2 } = lineEnd;
+  const { x: x1, y: y1 } = lineA;
+  const { x: x2, y: y2 } = lineB;
   const { x: x0, y: y0 } = point;
   const A = y2 - y1;
   const B = x1 - x2;
   const C = x2 * y1 - x1 * y2;
-  if (A === 0 && B === 0) return getDistanceBetweenPoints(point, lineStart);
+  if (A === 0 && B === 0) return getDistanceBetweenPoints(point, lineA);
   return Math.abs(A * x0 + B * y0 + C) / Math.sqrt(A * A + B * B);
 }
 
