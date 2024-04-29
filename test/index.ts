@@ -87,7 +87,7 @@ const text = new Text({
   },
 });
 
-// const transformer = new Transformer({});
+const transformer = new Transformer({});
 // transformer.linkTo(rect);
 // const ans = [];
 // for (let i = 0; i < 100000; ++i) {
@@ -103,22 +103,23 @@ const text = new Text({
 //     })
 //   );
 // }
-// const group = new Group();
-// group.place();
-svc.place(rect, ellipse, rect2);
-const testMultipleSelectList = new MultipleSelectList();
-svc.place(testMultipleSelectList);
-testMultipleSelectList.place(rect, rect2);
+const group = new Group();
+group.place(rect, ellipse, rect2);
+transformer.linkTo(group);
+svc.place(group, transformer);
+// const testMultipleSelectList = new MultipleSelectList();
+// svc.place(testMultipleSelectList);
+// testMultipleSelectList.place(rect, rect2);
 
-console.log(testMultipleSelectList);
+// console.log(testMultipleSelectList);
 
 // const startTime = Date.now();
 // const endTime = Date.now();
 // console.log("耗时: " + (endTime - startTime));
-// svc.startEvent();
-// svc.eventOn("ve-mouseover", (event: SimpleEventType) => {
-//   console.log(event);
-// });
+svc.startEvent();
+svc.eventOn("ve-mouseover", (event: SimpleEventType) => {
+  console.log(event);
+});
 
 // rect.eventOn("ve-mouseover", (event: SimpleEventType) => {
 //   const style = rect.getStyle();
@@ -133,5 +134,5 @@ rect.eventOn("ve-mouseout", (event: SimpleEventType) => {
 });
 
 setTimeout(() => {
-  testMultipleSelectList.update("rotate", 50);
+  // testMultipleSelectList.update("rotate", 50);
 }, 1500);

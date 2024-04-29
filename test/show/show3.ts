@@ -1,4 +1,5 @@
 import { SimpleEventType } from "../../src/core/EventMapping";
+import { Group } from "../../src/core/Group";
 import {
   StaticVerbalCanvas,
   staticVerbalCanvas,
@@ -17,8 +18,14 @@ const btnCanvasThreeDrawCircle = document.getElementById(
 let index = -1;
 const transformer = new Transformer();
 verbalCanvas.eventOn("ve-mousedown", (event: SimpleEventType) => {
+  console.log(event);
+
   const target = event.target;
-  if (target && target.getObjectType() === "widget") {
+  if (
+    target &&
+    (target.getObjectType() === "widget" ||
+      target.getAttr("containerType") === "group")
+  ) {
     if (target.getAttr("widgetType") === "transformer" && index === -1) {
       const { offsetX, offsetY } = event.hostMouseEvent!;
       index = (target as Transformer).pointOnControlPointIndex({
@@ -38,7 +45,7 @@ verbalCanvas.eventOn("ve-mousemove", (event: SimpleEventType) => {
   if (index !== -1) {
     // debugger;
     const { offsetX, offsetY } = event.hostMouseEvent!;
-    transformer.transformTarget({ x: offsetX, y: offsetY }, index);
+    transformer.transformTarget({ x: offsetX, y: offsetY }, index, true);
   }
 });
 
@@ -66,10 +73,19 @@ btnCanvasThreeDrawRect?.addEventListener("click", () => {
 btnCanvasThreeDrawCircle?.addEventListener("click", () => {
   const circle = StaticVerbalCanvas.Ellipse({
     x: 300,
-    y: 300,
+    y: 200,
     width: 200,
     height: 200,
     style: { fillStyle: "blue" },
   });
-  verbalCanvas.place(circle);
+  const circle2 = StaticVerbalCanvas.Ellipse({
+    x: 200,
+    y: 200,
+    width: 200,
+    height: 200,
+    style: { fillStyle: "blue" },
+  });
+  const group = new Group();
+  group.place(circle, circle2);
+  verbalCanvas.place(group);
 });

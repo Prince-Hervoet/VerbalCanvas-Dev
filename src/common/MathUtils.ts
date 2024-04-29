@@ -117,9 +117,6 @@ export function isPointInEllipse(
   rotate: number,
   isAngleRadians: boolean = false
 ): boolean {
-  // const dx = (point.x - center.x) / radiusX;
-  // const dy = (point.y - center.y) / radiusY;
-  // return dx * dx + dy * dy <= 1;
   let rotateRad = rotate;
   if (!isAngleRadians) rotateRad = degreesToRadians(rotate);
   const mathCos = Math.cos(rotateRad);
@@ -371,14 +368,6 @@ export function getDistanceToLine(
   return Math.abs(A * x0 + B * y0 + C) / Math.sqrt(A * A + B * B);
 }
 
-export function getLineYByX(x: number, lineStart: Point, lineEnd: Point) {
-  const { x: x1, y: y1 } = lineStart;
-  const { x: x2, y: y2 } = lineEnd;
-  const A = y2 - y1;
-  const B = x1 - x2;
-  const C = x2 * y1 - x1 * y2;
-}
-
 /**
  * 获取点在直线的哪一侧 1表示左边或者上边 -1表示右边或者下边 0表示在直线上
  * @param point
@@ -397,7 +386,7 @@ export function getPointLineSide(
   const A = y2 - y1;
   const B = x1 - x2;
   const C = x2 * y1 - x1 * y2;
-  if (A === 0 && B === 0) return -2;
+  if (A === 0 && B === 0) throw "It's not a straight line.";
   let pos = 1;
   if (A === 0 && y0 > y2) pos = -1;
   if (A === 0) {
@@ -437,16 +426,32 @@ export function rotateVertices(
   return ans;
 }
 
+/**
+ * 生成min到max之间的随机数（包括min和max）
+ * @param min
+ * @param max
+ * @returns
+ */
 export function generateRandomNumber(min: number, max: number): number {
-  // 生成min到max之间的随机数（包括min和max）
-  const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-  return randomNumber;
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export function centerPointToXAndY(
-  centerPoint: Point,
-  width: number,
-  height: number
-) {
-  return [centerPoint.x - width / 2, centerPoint.y - height / 2];
+/**
+ * 获取一个点在一条直线上的投影点
+ * @param point
+ * @param lineA
+ * @param lineB
+ * @returns
+ */
+export function getProjectionPointOnLine(
+  point: Point,
+  lineA: Point,
+  lineB: Point
+): Point {
+  const c1 = lineB.x - lineA.x;
+  if (c1 === 0) return { x: lineA.x, y: point.y };
+  const m = (lineB.y - lineA.y) / c1;
+  const b = lineA.y - m * lineA.x;
+  const xP = (m * point.y + point.x - m * b) / (m * m + 1);
+  return { x: xP, y: m * xP + b };
 }

@@ -4,9 +4,11 @@ import {
   Vector2,
   ZeroOneVector2,
   degreesToRadians,
+  getDistanceBetweenPoints,
   getDistanceToLine,
   getMidPoint,
   getPointLineSide,
+  getProjectionPointOnLine,
   getTwoVectorsAngle,
   isPointInCircle,
   rotatePoint,
@@ -147,13 +149,23 @@ export class Transformer extends BaseWidget {
     return this.pointOnControlPointIndex(point) !== -1;
   }
 
-  transformTarget(mousePoint: Point, index: number): number {
+  transformTarget(
+    mousePoint: Point,
+    index: number,
+    isProportional: boolean = false
+  ): number {
     if (!this.linkTarget) return -1;
     const boundingBox = this.getBoundingBoxVertices();
+    const b0 = boundingBox[0];
+    const b1 = boundingBox[1];
+    const b2 = boundingBox[2];
+    const b3 = boundingBox[3];
     const rotateRad = degreesToRadians(this.getRotate());
     const neRotateRad = -rotateRad;
-    let nWidth = 0,
-      nHeight = 0;
+    let nw = 0,
+      nh = 0,
+      nx = 0,
+      ny = 0;
     let temp1: Point, temp2: Point;
     let shouldIndex = index;
     let updateResult: any = {};
@@ -163,253 +175,127 @@ export class Transformer extends BaseWidget {
       pos2 = 0,
       pos3 = 0,
       pos4 = 0;
+    const nCenterPoint = this.centerPoint;
     switch (index) {
       case ControlPointNames.TOP_LEFT: // 左上角
-        pos1 = getPointLineSide(mousePoint, boundingBox[1], boundingBox[2]);
-        pos2 = getPointLineSide(mousePoint, boundingBox[2], boundingBox[3]);
-        pos3 = getPointLineSide(boundingBox[0], boundingBox[1], boundingBox[2]);
-        pos4 = getPointLineSide(boundingBox[0], boundingBox[2], boundingBox[3]);
+        pos1 = getPointLineSide(mousePoint, b1, b2);
+        pos2 = getPointLineSide(mousePoint, b2, b3);
+        pos3 = getPointLineSide(b0, b1, b2);
+        pos4 = getPointLineSide(b0, b2, b3);
         if (pos1 !== pos3 && pos2 !== pos4) {
-          mousePoint = rotatePoint(
-            boundingBox[2],
-            this.centerPoint,
-            neRotateRad,
-            true
-          );
+          mousePoint = rotatePoint(b2, nCenterPoint, neRotateRad, true);
           mousePoint.y -= 1;
           mousePoint.x -= 1;
-          mousePoint = rotatePoint(
-            mousePoint,
-            this.centerPoint,
-            rotateRad,
-            true
-          );
+          mousePoint = rotatePoint(mousePoint, nCenterPoint, rotateRad, true);
           shouldIndex = 2;
         } else if (pos1 !== pos3) {
-          mousePoint = rotatePoint(
-            boundingBox[1],
-            this.centerPoint,
-            neRotateRad,
-            true
-          );
+          mousePoint = rotatePoint(b1, nCenterPoint, neRotateRad, true);
           mousePoint.x -= 1;
-          mousePoint = rotatePoint(
-            mousePoint,
-            this.centerPoint,
-            rotateRad,
-            true
-          );
+          mousePoint = rotatePoint(mousePoint, nCenterPoint, rotateRad, true);
           shouldIndex = 1;
         } else if (pos2 !== pos4) {
-          mousePoint = rotatePoint(
-            boundingBox[3],
-            this.centerPoint,
-            neRotateRad,
-            true
-          );
+          mousePoint = rotatePoint(b3, nCenterPoint, neRotateRad, true);
           mousePoint.y -= 1;
-          mousePoint = rotatePoint(
-            mousePoint,
-            this.centerPoint,
-            rotateRad,
-            true
-          );
+          mousePoint = rotatePoint(mousePoint, nCenterPoint, rotateRad, true);
           shouldIndex = 3;
         }
-        nWidth = getDistanceToLine(mousePoint, boundingBox[1], boundingBox[2]);
-        nHeight = getDistanceToLine(mousePoint, boundingBox[2], boundingBox[3]);
-        temp1 = getMidPoint(mousePoint, boundingBox[2]);
+        if (isProportional)
+          mousePoint = getProjectionPointOnLine(mousePoint, b0, b2);
+        nw = getDistanceToLine(mousePoint, b1, b2);
+        nh = getDistanceToLine(mousePoint, b2, b3);
+        temp1 = getMidPoint(mousePoint, b2);
         temp2 = rotatePoint(mousePoint, temp1, neRotateRad, true);
-        updateResult = {
-          x: temp2.x,
-          y: temp2.y,
-          width: nWidth,
-          height: nHeight,
-        };
+        updateResult = { x: temp2.x, y: temp2.y, width: nw, height: nh };
         break;
       case ControlPointNames.TOP_RIGHT: // 右上角
         // debugger;
-        pos1 = getPointLineSide(mousePoint, boundingBox[0], boundingBox[3]);
-        pos2 = getPointLineSide(mousePoint, boundingBox[2], boundingBox[3]);
-        pos3 = getPointLineSide(boundingBox[1], boundingBox[0], boundingBox[3]);
-        pos4 = getPointLineSide(boundingBox[1], boundingBox[2], boundingBox[3]);
+        pos1 = getPointLineSide(mousePoint, b0, b3);
+        pos2 = getPointLineSide(mousePoint, b2, b3);
+        pos3 = getPointLineSide(b1, b0, b3);
+        pos4 = getPointLineSide(b1, b2, b3);
         if (pos1 !== pos3 && pos2 !== pos4) {
-          mousePoint = rotatePoint(
-            boundingBox[3],
-            this.centerPoint,
-            neRotateRad,
-            true
-          );
+          mousePoint = rotatePoint(b3, nCenterPoint, neRotateRad, true);
           mousePoint.y -= 1;
           mousePoint.x += 1;
-          mousePoint = rotatePoint(
-            mousePoint,
-            this.centerPoint,
-            rotateRad,
-            true
-          );
+          mousePoint = rotatePoint(mousePoint, nCenterPoint, rotateRad, true);
           shouldIndex = 3;
         } else if (pos1 !== pos3) {
-          mousePoint = rotatePoint(
-            boundingBox[0],
-            this.centerPoint,
-            neRotateRad,
-            true
-          );
+          mousePoint = rotatePoint(b0, nCenterPoint, neRotateRad, true);
           mousePoint.x += 1;
-          mousePoint = rotatePoint(
-            mousePoint,
-            this.centerPoint,
-            rotateRad,
-            true
-          );
+          mousePoint = rotatePoint(mousePoint, nCenterPoint, rotateRad, true);
           shouldIndex = 0;
         } else if (pos2 !== pos4) {
-          mousePoint = rotatePoint(
-            boundingBox[2],
-            this.centerPoint,
-            neRotateRad,
-            true
-          );
+          mousePoint = rotatePoint(b2, nCenterPoint, neRotateRad, true);
           mousePoint.y -= 1;
-          mousePoint = rotatePoint(
-            mousePoint,
-            this.centerPoint,
-            rotateRad,
-            true
-          );
+          mousePoint = rotatePoint(mousePoint, nCenterPoint, rotateRad, true);
           shouldIndex = 2;
         }
-        nWidth = getDistanceToLine(mousePoint, boundingBox[0], boundingBox[3]);
-        nHeight = getDistanceToLine(mousePoint, boundingBox[2], boundingBox[3]);
-        temp1 = getMidPoint(mousePoint, boundingBox[3]);
+        if (isProportional)
+          mousePoint = getProjectionPointOnLine(mousePoint, b3, b1);
+        nw = getDistanceToLine(mousePoint, b0, b3);
+        nh = getDistanceToLine(mousePoint, b2, b3);
+        temp1 = getMidPoint(mousePoint, b3);
         temp2 = rotatePoint(mousePoint, temp1, neRotateRad, true);
-        updateResult = {
-          x: temp2.x - nWidth,
-          y: temp2.y,
-          width: nWidth,
-          height: nHeight,
-        };
+        updateResult = { x: temp2.x - nw, y: temp2.y, width: nw, height: nh };
         break;
       case ControlPointNames.BOTTOM_RIGHT: // 右下角
-        pos1 = getPointLineSide(mousePoint, boundingBox[0], boundingBox[3]);
-        pos2 = getPointLineSide(mousePoint, boundingBox[0], boundingBox[1]);
-        pos3 = getPointLineSide(boundingBox[2], boundingBox[0], boundingBox[3]);
-        pos4 = getPointLineSide(boundingBox[2], boundingBox[0], boundingBox[1]);
+        pos1 = getPointLineSide(mousePoint, b0, b3);
+        pos2 = getPointLineSide(mousePoint, b0, b1);
+        pos3 = getPointLineSide(b2, b0, b3);
+        pos4 = getPointLineSide(b2, b0, b1);
         if (pos1 !== pos3 && pos2 !== pos4) {
-          mousePoint = rotatePoint(
-            boundingBox[0],
-            this.centerPoint,
-            neRotateRad,
-            true
-          );
+          mousePoint = rotatePoint(b0, nCenterPoint, neRotateRad, true);
           mousePoint.y += 1;
           mousePoint.x += 1;
-          mousePoint = rotatePoint(
-            mousePoint,
-            this.centerPoint,
-            rotateRad,
-            true
-          );
+          mousePoint = rotatePoint(mousePoint, nCenterPoint, rotateRad, true);
           shouldIndex = 0;
         } else if (pos1 !== pos3) {
-          mousePoint = rotatePoint(
-            boundingBox[3],
-            this.centerPoint,
-            neRotateRad,
-            true
-          );
+          mousePoint = rotatePoint(b3, nCenterPoint, neRotateRad, true);
           mousePoint.x += 1;
-          mousePoint = rotatePoint(
-            mousePoint,
-            this.centerPoint,
-            rotateRad,
-            true
-          );
+          mousePoint = rotatePoint(mousePoint, nCenterPoint, rotateRad, true);
           shouldIndex = 3;
         } else if (pos2 !== pos4) {
-          mousePoint = rotatePoint(
-            boundingBox[1],
-            this.centerPoint,
-            neRotateRad,
-            true
-          );
+          mousePoint = rotatePoint(b1, nCenterPoint, neRotateRad, true);
           mousePoint.y += 1;
-          mousePoint = rotatePoint(
-            mousePoint,
-            this.centerPoint,
-            rotateRad,
-            true
-          );
+          mousePoint = rotatePoint(mousePoint, nCenterPoint, rotateRad, true);
           shouldIndex = 1;
         }
-        nWidth = getDistanceToLine(mousePoint, boundingBox[0], boundingBox[3]);
-        nHeight = getDistanceToLine(mousePoint, boundingBox[0], boundingBox[1]);
-        updateResult = { width: nWidth, height: nHeight };
+        if (isProportional)
+          mousePoint = getProjectionPointOnLine(mousePoint, b0, b2);
+        nw = getDistanceToLine(mousePoint, b0, b3);
+        nh = getDistanceToLine(mousePoint, b0, b1);
+        updateResult = { width: nw, height: nh };
         break;
       case ControlPointNames.BOTTOM_LEFT: // 左下角
         // debugger;
-        pos1 = getPointLineSide(mousePoint, boundingBox[1], boundingBox[2]);
-        pos2 = getPointLineSide(mousePoint, boundingBox[0], boundingBox[1]);
-        pos3 = getPointLineSide(boundingBox[3], boundingBox[1], boundingBox[2]);
-        pos4 = getPointLineSide(boundingBox[3], boundingBox[0], boundingBox[1]);
+        pos1 = getPointLineSide(mousePoint, b1, b2);
+        pos2 = getPointLineSide(mousePoint, b0, b1);
+        pos3 = getPointLineSide(b3, b1, b2);
+        pos4 = getPointLineSide(b3, b0, b1);
         if (pos1 !== pos3 && pos2 !== pos4) {
-          mousePoint = rotatePoint(
-            boundingBox[1],
-            this.centerPoint,
-            neRotateRad,
-            true
-          );
+          mousePoint = rotatePoint(b1, nCenterPoint, neRotateRad, true);
           mousePoint.y += 1;
           mousePoint.x -= 1;
-          mousePoint = rotatePoint(
-            mousePoint,
-            this.centerPoint,
-            rotateRad,
-            true
-          );
+          mousePoint = rotatePoint(mousePoint, nCenterPoint, rotateRad, true);
           shouldIndex = 1;
         } else if (pos1 !== pos3) {
-          mousePoint = rotatePoint(
-            boundingBox[2],
-            this.centerPoint,
-            neRotateRad,
-            true
-          );
+          mousePoint = rotatePoint(b2, nCenterPoint, neRotateRad, true);
           mousePoint.x -= 1;
-          mousePoint = rotatePoint(
-            mousePoint,
-            this.centerPoint,
-            rotateRad,
-            true
-          );
+          mousePoint = rotatePoint(mousePoint, nCenterPoint, rotateRad, true);
           shouldIndex = 2;
         } else if (pos2 !== pos4) {
-          mousePoint = rotatePoint(
-            boundingBox[0],
-            this.centerPoint,
-            neRotateRad,
-            true
-          );
+          mousePoint = rotatePoint(b0, nCenterPoint, neRotateRad, true);
           mousePoint.y += 1;
-          mousePoint = rotatePoint(
-            mousePoint,
-            this.centerPoint,
-            rotateRad,
-            true
-          );
+          mousePoint = rotatePoint(mousePoint, nCenterPoint, rotateRad, true);
           shouldIndex = 0;
         }
-        nWidth = getDistanceToLine(mousePoint, boundingBox[1], boundingBox[2]);
-        nHeight = getDistanceToLine(mousePoint, boundingBox[0], boundingBox[1]);
-        temp1 = getMidPoint(mousePoint, boundingBox[1]);
+        if (isProportional)
+          mousePoint = getProjectionPointOnLine(mousePoint, b3, b1);
+        nw = getDistanceToLine(mousePoint, b1, b2);
+        nh = getDistanceToLine(mousePoint, b0, b1);
+        temp1 = getMidPoint(mousePoint, b1);
         temp2 = rotatePoint(mousePoint, temp1, neRotateRad, true);
-        updateResult = {
-          x: temp2.x,
-          y: temp2.y - nHeight,
-          width: nWidth,
-          height: nHeight,
-        };
+        updateResult = { x: temp2.x, y: temp2.y - nh, width: nw, height: nh };
         break;
       case ControlPointNames.ROTATE_POINT: // 旋转点
         const centerPoint = this.getCenterPoint();
@@ -418,90 +304,63 @@ export class Transformer extends BaseWidget {
         updateResult = { rotate: angle };
         break;
       case ControlPointNames.TOP_CENTER:
-        pos1 = getPointLineSide(mousePoint, boundingBox[2], boundingBox[3]);
-        pos2 = getPointLineSide(boundingBox[1], boundingBox[2], boundingBox[3]);
+        if (isProportional) break;
+        pos1 = getPointLineSide(mousePoint, b2, b3);
+        pos2 = getPointLineSide(b1, b2, b3);
         if (pos1 !== pos2) {
-          nHeight = 1;
+          nh = 1;
           shouldIndex = 7;
-        } else {
-          nHeight = getDistanceToLine(
-            mousePoint,
-            boundingBox[2],
-            boundingBox[3]
-          );
-        }
-        const halfnHeight = nHeight / 2;
-        temp1 = getMidPoint(boundingBox[2], boundingBox[3]);
+        } else nh = getDistanceToLine(mousePoint, b2, b3);
+        const halfnH = nh / 2;
+        temp1 = getMidPoint(b2, b3);
         temp2 = {
-          x: temp1.x + mathSin * halfnHeight,
-          y: temp1.y - mathCos * halfnHeight,
+          x: temp1.x + mathSin * halfnH,
+          y: temp1.y - mathCos * halfnH,
         };
         temp1 = rotatePoint(temp1, temp2, neRotateRad, true);
-        updateResult = {
-          x: temp1.x - this.width / 2,
-          y: temp1.y - nHeight,
-          height: nHeight,
-        };
+        nx = temp1.x - this.width / 2;
+        ny = temp1.y - nh;
+        updateResult = { x: nx, y: ny, height: nh };
         break;
       case ControlPointNames.RIGHT_CENTER:
+        if (isProportional) break;
         // debugger;
-        pos1 = getPointLineSide(mousePoint, boundingBox[0], boundingBox[3]);
-        pos2 = getPointLineSide(boundingBox[1], boundingBox[0], boundingBox[3]);
+        pos1 = getPointLineSide(mousePoint, b0, b3);
+        pos2 = getPointLineSide(b1, b0, b3);
         if (pos1 !== pos2) {
-          nWidth = 1;
+          nw = 1;
           shouldIndex = 8;
-        } else {
-          nWidth = getDistanceToLine(
-            mousePoint,
-            boundingBox[0],
-            boundingBox[3]
-          );
-        }
-        updateResult = { width: nWidth };
-        if (nWidth === 1) {
-          shouldIndex = 8;
-        }
+        } else nw = getDistanceToLine(mousePoint, b0, b3);
+        updateResult = { width: nw };
         break;
       case ControlPointNames.BOTTOM_CENTER:
-        pos1 = getPointLineSide(mousePoint, boundingBox[0], boundingBox[1]);
-        pos2 = getPointLineSide(boundingBox[2], boundingBox[0], boundingBox[1]);
+        if (isProportional) break;
+        pos1 = getPointLineSide(mousePoint, b0, b1);
+        pos2 = getPointLineSide(b2, b0, b1);
         if (pos1 !== pos2) {
-          nHeight = 1;
+          nh = 1;
           shouldIndex = 5;
-        } else {
-          nHeight = getDistanceToLine(
-            mousePoint,
-            boundingBox[0],
-            boundingBox[1]
-          );
-        }
-        updateResult = { height: nHeight };
+        } else nh = getDistanceToLine(mousePoint, b0, b1);
+        updateResult = { height: nh };
         break;
       case ControlPointNames.LEFT_CENTER:
-        pos1 = getPointLineSide(mousePoint, boundingBox[1], boundingBox[2]);
-        pos2 = getPointLineSide(boundingBox[0], boundingBox[1], boundingBox[2]);
+        if (isProportional) break;
+        pos1 = getPointLineSide(mousePoint, b1, b2);
+        pos2 = getPointLineSide(b0, b1, b2);
         if (pos1 !== pos2) {
-          nWidth = 1;
+          nw = 1;
           shouldIndex = 6;
-        } else {
-          nWidth = getDistanceToLine(
-            mousePoint,
-            boundingBox[1],
-            boundingBox[2]
-          );
-        }
-        const halfnWidth = nWidth / 2;
-        temp1 = getMidPoint(boundingBox[1], boundingBox[2]);
+        } else nw = getDistanceToLine(mousePoint, b1, b2);
+        const halfnWidth = nw / 2;
+        temp1 = getMidPoint(b1, b2);
         temp2 = {
           x: temp1.x - mathCos * halfnWidth,
           y: temp1.y - mathSin * halfnWidth,
         };
         temp1 = rotatePoint(temp1, temp2, -rotateRad, true);
-        updateResult = {
-          x: temp1.x - nWidth,
-          y: temp2.y - this.height / 2,
-          width: nWidth,
-        };
+        nx = temp1.x - nw;
+        ny = temp2.y - this.height / 2;
+        updateResult = { x: nx, y: ny, width: nw };
         break;
     }
     const targetUpdateResult = this.changeUpdateResultToScale(updateResult);
