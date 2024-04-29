@@ -5,6 +5,7 @@ import { Group } from "./Group";
 import { Painter } from "./Painter";
 import { VerbalObject } from "./VerbalObject";
 
+// TODO: 将多选逻辑设计完整
 export class MultipleSelectList extends Group {
   constructor() {
     super();

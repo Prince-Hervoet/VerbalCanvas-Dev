@@ -269,15 +269,12 @@ export function isPointOnLine(
   const dx = end.x - start.x;
   const dy = end.y - start.y;
   const segmentLengthSquared = dx * dx + dy * dy;
-  if (segmentLengthSquared === 0) {
+  if (segmentLengthSquared === 0)
     return point.x === start.x && point.y === start.y;
-  }
   const toStartVector = { x: point.x - start.x, y: point.y - start.y };
   const projection =
     (toStartVector.x * dx + toStartVector.y * dy) / segmentLengthSquared;
-  if (projection < 0 || projection > 1) {
-    return false;
-  }
+  if (projection < 0 || projection > 1) return false;
   const perpendicularDistanceSquared =
     (toStartVector.x * dy - toStartVector.y * dx) ** 2 / segmentLengthSquared;
   return perpendicularDistanceSquared <= (lineWidth / 2) ** 2;
