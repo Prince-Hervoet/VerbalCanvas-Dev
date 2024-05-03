@@ -16,7 +16,7 @@ import {
 import { BaseContainer } from "./BaseContainer";
 import {
   EventHandlersType,
-  IEventHandler,
+  EventHandler,
   SimpleEventType,
   INNER_EVENT_TYPE,
 } from "./EventMapping";
@@ -39,7 +39,7 @@ export const V_OBJECT_TYPE = {
 /**
  * 总元素类
  */
-export abstract class VerbalObject implements IEventHandler {
+export abstract class VerbalObject implements EventHandler {
   protected vObjectId: string = ""; // 元素id
   protected vObjectType: string = ""; // 元素类型
   protected x: number = 0; // left坐标
@@ -284,6 +284,7 @@ export abstract class VerbalObject implements IEventHandler {
     oldValue: Record<string, any>
   ) {
     const { width, height, scaleX, scaleY, x, y, rotate } = newValue;
+    // 先判断是否更新了宽高
     if (!isAllNullOrUndefined(width, height, scaleX, scaleY)) {
       if (!isNullOrUndefined(width)) {
         oldValue.width = this.width;

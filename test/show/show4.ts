@@ -11,6 +11,7 @@ const verbalCanvas = staticVerbalCanvas(canvasFour, {
   width: 800,
   height: 500,
 });
+
 verbalCanvas.startEvent();
 const btnCanvasFourDrawRect = document.getElementById("canvasFour_drawRect");
 const btnCanvasFourDrawCircle = document.getElementById(
@@ -38,6 +39,7 @@ btnCanvasFourDrawRect?.addEventListener("click", () => {
   });
   verbalCanvas.place(rect);
 });
+
 btnCanvasFourDrawCircle?.addEventListener("click", () => {
   const circle = StaticVerbalCanvas.Ellipse({
     x: 300,

@@ -28,7 +28,7 @@ export interface SimpleEventType {
 /**
  * 事件订阅触发处理接口
  */
-export interface IEventHandler {
+export interface EventHandler {
   eventOn(name: string, handler: Function): void;
   eventOff(name: string, handler?: Function): void;
   eventRun(name: string, ...args: any[]): void;
