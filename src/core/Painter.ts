@@ -140,7 +140,7 @@ export class BasePainter implements Painter {
         break;
       case "line":
         this.context.beginPath();
-        this.context.moveTo(this.defaultStartPoint.x, this.defaultStartPoint.y);
+        this.context.moveTo(0, 0);
         this.context.lineTo(finalWidth, finalHeight);
         break;
       default:
