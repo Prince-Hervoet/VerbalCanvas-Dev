@@ -11,6 +11,7 @@ import { Picture } from "../src/widgets/Picture";
 import { Text } from "../src/widgets/Text";
 import { Transformer } from "../src/widgets/default/Transformer";
 import { MultipleSelectList } from "../src/core/MultipleSelectList";
+import { Line } from "../src/widgets/Line";
 
 const container = document.getElementById("main")!;
 const canvasDom = document.getElementById("canvas")! as HTMLCanvasElement;
@@ -102,11 +103,18 @@ const transformer = new Transformer({});
 //       },
 //     })
 //   );
-// }
-const group = new Group();
-group.place(rect, ellipse, rect2);
-transformer.linkTo(group);
-svc.place(group, transformer);
+// // }
+// const group = new Group();
+// group.place(rect, ellipse, rect2);
+// transformer.linkTo(group);
+const line = new Line({
+  x1: 100,
+  y1: 100,
+  x2: 200,
+  y2: 300,
+  style: { strokeStyle: "green", lineWidth: 10 },
+});
+svc.place(line);
 // const testMultipleSelectList = new MultipleSelectList();
 // svc.place(testMultipleSelectList);
 // testMultipleSelectList.place(rect, rect2);
@@ -127,11 +135,11 @@ svc.eventOn("ve-mouseover", (event: SimpleEventType) => {
 //   rect.update("style", style);
 // });
 
-rect.eventOn("ve-mouseout", (event: SimpleEventType) => {
-  const style = rect.getStyle();
-  style.fillStyle = "#2E8B57";
-  rect.update("style", style);
-});
+// rect.eventOn("ve-mouseout", (event: SimpleEventType) => {
+//   const style = rect.getStyle();
+//   style.fillStyle = "#2E8B57";
+//   rect.update("style", style);
+// });
 
 setTimeout(() => {
   // testMultipleSelectList.update("rotate", 50);
