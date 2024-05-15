@@ -4,7 +4,7 @@ const btnCanvasOneDrawRect = document.getElementById("canvasOne_drawRect");
 const btnCanvasOneDrawCircle = document.getElementById("canvasOne_drawCircle");
 btnCanvasOneDrawRect?.addEventListener("click", () => {
   ctxOne.fillStyle = "green";
-  ctxOne.fillRect(100, 100, 150, 100);
+  ctxOne.fillRect(150, 150, 150, 100);
 });
 btnCanvasOneDrawCircle?.addEventListener("click", () => {
   ctxOne.fillStyle = "blue";

@@ -40,7 +40,7 @@ export class BasePainter implements Painter {
     const widgetType: string = widget.getAttr("widgetType");
     if (!BasePainter.sustainingTypes.includes(widgetType)) return false;
     // ==================以上是判断类型=======================
-    if (BasePainter.sustainingTypes.includes(widgetType))
+    if (BasePainter.specialTypes.includes(widgetType))
       return this.handleSpecialWidget(widget);
     // ================以上是区分特殊类型======================
     const style = widget.getAttr("style");

@@ -1,8 +1,4 @@
-import { isObjectLiteralElementLike } from "typescript";
-import { generateRandomNumber } from "../src/common/MathUtils";
-import { generateRandomHexColor, parseSvgPath } from "../src/common/Utils";
 import { SimpleEventType } from "../src/core/EventMapping";
-import { Group } from "../src/core/Group";
 import {
   StaticVerbalCanvas,
   staticVerbalCanvas,
@@ -10,8 +6,8 @@ import {
 import { Picture } from "../src/widgets/Picture";
 import { Text } from "../src/widgets/Text";
 import { Transformer } from "../src/widgets/default/Transformer";
-import { MultipleSelectList } from "../src/core/MultipleSelectList";
 import { Line } from "../src/widgets/Line";
+import { Animation } from "../src/widgets/default/Animation";
 
 const container = document.getElementById("main")!;
 const canvasDom = document.getElementById("canvas")! as HTMLCanvasElement;
@@ -24,7 +20,7 @@ const svc = staticVerbalCanvas(canvasDom, {
   },
 });
 const rect = StaticVerbalCanvas.Rect({
-  x: 100,
+  x: 200,
   y: 100,
   width: 200,
   height: 200,
@@ -114,7 +110,15 @@ const line = new Line({
   y2: 300,
   style: { strokeStyle: "green", lineWidth: 10 },
 });
-svc.place(line);
+
+const period = 2000;
+
+const animation = new Animation((timestamp: number, duration: number) => {
+  rect.update("x", 60 * Math.sin((timestamp * 2 * Math.PI) / period) + 100);
+});
+
+svc.place(rect);
+// animation.startAnimation();
 // const testMultipleSelectList = new MultipleSelectList();
 // svc.place(testMultipleSelectList);
 // testMultipleSelectList.place(rect, rect2);

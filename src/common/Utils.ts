@@ -1,3 +1,5 @@
+export const UNKNOWN_STR = "unknown";
+
 export interface Command {
   command: string;
   args: number[];
