@@ -8,6 +8,7 @@ import { Text } from "../src/widgets/Text";
 import { Transformer } from "../src/widgets/default/Transformer";
 import { Line } from "../src/widgets/Line";
 import { Animation } from "../src/widgets/default/Animation";
+import { Group } from "../src/core/Group";
 
 const container = document.getElementById("main")!;
 const canvasDom = document.getElementById("canvas")! as HTMLCanvasElement;
@@ -100,16 +101,16 @@ const transformer = new Transformer({});
 //     })
 //   );
 // // }
-// const group = new Group();
-// group.place(rect, ellipse, rect2);
+const group = new Group();
+group.place(rect, ellipse, rect2);
 // transformer.linkTo(group);
-const line = new Line({
-  x1: 100,
-  y1: 100,
-  x2: 200,
-  y2: 300,
-  style: { strokeStyle: "green", lineWidth: 10 },
-});
+// const line = new Line({
+//   x1: 100,
+//   y1: 100,
+//   x2: 200,
+//   y2: 300,
+//   style: { strokeStyle: "green", lineWidth: 10 },
+// });
 
 const period = 2000;
 
@@ -118,6 +119,11 @@ const animation = new Animation((timestamp: number, duration: number) => {
 });
 
 svc.place(rect);
+svc.startEvent();
+
+rect.eventOn("ve-mouseup", (event: SimpleEventType) => {
+  console.log(event);
+});
 // animation.startAnimation();
 // const testMultipleSelectList = new MultipleSelectList();
 // svc.place(testMultipleSelectList);

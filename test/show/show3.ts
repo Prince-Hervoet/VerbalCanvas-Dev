@@ -19,7 +19,6 @@ let index = -1;
 const transformer = new Transformer();
 verbalCanvas.eventOn("ve-mousedown", (event: SimpleEventType) => {
   console.log(event);
-
   const target = event.target;
   if (
     target &&
@@ -45,7 +44,7 @@ verbalCanvas.eventOn("ve-mousemove", (event: SimpleEventType) => {
   if (index !== -1) {
     // debugger;
     const { offsetX, offsetY } = event.hostMouseEvent!;
-    transformer.transformTarget({ x: offsetX, y: offsetY }, index, true);
+    transformer.transformTarget({ x: offsetX, y: offsetY }, index, false);
   }
 });
 
