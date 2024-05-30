@@ -8,15 +8,14 @@ import { BaseContainer, V_CONTAINER_TYPE } from "./BaseContainer";
 import { VerbalObject } from "./VerbalObject";
 import { Painter } from "./Painter";
 import { isNullOrUndefined } from "../common/Utils";
-import { SimpleHashList } from "../common/SimpleHashList";
-
-type ObjectListType = SimpleHashList<string, VerbalObject>;
+import { ShlType, SimpleHashList } from "../common/SimpleHashList";
 
 /**
+ * TODO: 将members替换掉，处理深层的鼠标响应
  * 组类
  */
 export class Group extends BaseContainer {
-  protected objects: ObjectListType = new SimpleHashList();
+  protected objectList: ShlType<string, VerbalObject> = new SimpleHashList();
   protected members: Set<VerbalObject> = new Set(); // 存放成员的数据结构
   protected tempCenterPoint: Point = { x: 0, y: 0 };
 
@@ -104,6 +103,7 @@ export class Group extends BaseContainer {
     for (const member of this.members) this._recoverMemberCoord(member);
     for (const obj of coincident) {
       obj.transfer(this);
+      this.objectList.insertLast(obj.getObjectId(), obj);
       this.members.add(obj);
     }
     this._updateGroupFields();
@@ -122,6 +122,7 @@ export class Group extends BaseContainer {
       if (!obj) continue;
       if (!this.contains(obj)) continue;
       this._recoverMemberCoord(obj);
+      this.objectList.remove(obj.getObjectId());
       this.members.delete(obj);
       obj.transfer(null);
       hasUpdate = true;
