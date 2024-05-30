@@ -1,5 +1,5 @@
 import { Point } from "../common/MathUtils";
-import { SimpleHashList } from "../common/SimpleHashList";
+import { ShlType, SimpleHashList } from "../common/SimpleHashList";
 import { BaseContainer, V_CONTAINER_TYPE } from "./BaseContainer";
 import { Canvas } from "./Canvas";
 import { INNER_EVENT_TYPE } from "./EventMapping";
@@ -9,8 +9,7 @@ import { BasePainter, Painter } from "./Painter";
 export class VerbalLayer extends BaseContainer {
   private canvas: Canvas;
   private painter: Painter;
-  private objectList: SimpleHashList<string, VerbalObject> =
-    new SimpleHashList();
+  private objectList: ShlType<string, VerbalObject> = new SimpleHashList();
   private isRenderFlag: boolean = true;
 
   constructor(canvas: Canvas, painter?: Painter) {

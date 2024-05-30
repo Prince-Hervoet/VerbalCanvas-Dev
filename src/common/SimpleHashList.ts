@@ -1,6 +1,12 @@
-export interface ObjectList<K, V> {
+export interface ContainerList<K, V> {
   insertFirst(key: K, value: V): void;
+  insertLast(key: K, value: V): void;
+  remove(key: K): void;
+  contains(key: K): boolean;
 }
+
+// 简单哈希链表类型重命名
+export type ShlType<K, V> = SimpleHashList<K, V>;
 
 /**
  * 链表节点
@@ -84,7 +90,7 @@ export class SimpleHashListIterator<K, V> {
 /**
  * 哈希链表
  */
-export class SimpleHashList<K, V> {
+export class SimpleHashList<K, V> implements ContainerList<K, V> {
   private head: SimpleListNode<K, V> | null = null;
   private tail: SimpleListNode<K, V> | null = null;
   private keyToNode: Map<K, SimpleListNode<K, V>> = new Map();
