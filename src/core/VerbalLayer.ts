@@ -115,13 +115,16 @@ export class VerbalLayer extends BaseContainer {
    * @param y
    * @returns
    */
-  isPointInOneObject(point: Point): VerbalObject | null {
+  judgePointInOneObject(point: Point): VerbalObject | null {
     if (this.objectList.size() === 0) return null;
     let flag = this.objectList.getTail();
+    let res: VerbalObject | null = null;
     while (flag) {
-      const widget = flag.getValue();
-      if (widget.getIsPointEvent())
-        if (widget.isPointInObject(point)) return widget;
+      const obj = flag.getValue();
+      if (obj.getIsPointEvent()) {
+        res = obj.judgePointInObject(point);
+        if (res) return res;
+      }
       flag = flag.prev;
     }
     return null;

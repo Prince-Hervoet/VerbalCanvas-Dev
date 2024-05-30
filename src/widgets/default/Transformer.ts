@@ -145,7 +145,7 @@ export class Transformer extends BaseWidget {
     }
   }
 
-  isPointInObject(point: Point): boolean {
+  _isPointInObject(point: Point): boolean {
     return this.pointOnControlPointIndex(point) !== -1;
   }
 

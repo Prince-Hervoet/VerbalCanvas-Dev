@@ -65,7 +65,7 @@ export function createInnerHandler(verbal: VerbalLayer) {
   ) => {
     cacheMousePoint.x = hostMouseEvent.offsetX; // 每次都赋值而不是创建新的对象
     cacheMousePoint.y = hostMouseEvent.offsetY;
-    const widget = verbal.isPointInOneObject(cacheMousePoint);
+    const widget = verbal.judgePointInOneObject(cacheMousePoint);
     cacheEventObject.veEventName = veEventName;
     cacheEventObject.hostMouseEvent = hostMouseEvent;
     if (!widget) {
@@ -90,7 +90,7 @@ export function createInnerHandler(verbal: VerbalLayer) {
   ) => {
     cacheMousePoint.x = hostMouseEvent.offsetX; // 每次都赋值而不是创建新的对象
     cacheMousePoint.y = hostMouseEvent.offsetY;
-    const widget = verbal.isPointInOneObject(cacheMousePoint);
+    const widget = verbal.judgePointInOneObject(cacheMousePoint);
     cacheEventObject.hostMouseEvent = hostMouseEvent;
     if (!widget) {
       if (cacheOverWidget) {

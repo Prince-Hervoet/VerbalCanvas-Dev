@@ -49,7 +49,7 @@ export class Polygon extends BaseWidget {
     }
   }
 
-  public isPointInObject(point: Point): boolean {
+  protected _isPointInObject(point: Point): boolean {
     return isPointInPolygon(point, this.boundingBoxVertices);
   }
 }

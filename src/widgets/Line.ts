@@ -43,7 +43,7 @@ export class Line extends BaseWidget {
     this.updatePointFields();
   }
 
-  public isPointInObject(point: Point): boolean {
+  protected _isPointInObject(point: Point): boolean {
     return isPointOnLine(
       point,
       this.point1,

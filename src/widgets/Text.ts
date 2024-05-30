@@ -42,7 +42,7 @@ export class Text extends BaseWidget {
     ctx.fillText(this.text, 0, 0);
   }
 
-  public isPointInObject(point: Point): boolean {
+  protected _isPointInObject(point: Point): boolean {
     return isPointInPolygon(point, this.boundingBoxVertices);
   }
 }

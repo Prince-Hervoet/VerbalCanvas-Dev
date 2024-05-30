@@ -168,7 +168,7 @@ export class Combination extends BaseContainer {
     }
   }
 
-  isPointInObject(point: Point): boolean {
+  protected _isPointInObject(point: Point): boolean {
     return isPointInPolygon(point, this.boundingBoxVertices);
   }
 }

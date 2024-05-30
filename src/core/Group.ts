@@ -1,4 +1,9 @@
-import { Point, getGroupBoundingBox, rotatePoint } from "../common/MathUtils";
+import {
+  Point,
+  getGroupBoundingBox,
+  isPointInPolygon,
+  rotatePoint,
+} from "../common/MathUtils";
 import { ShlType, SimpleHashList } from "../common/SimpleHashList";
 import { hasProperty } from "../common/Utils";
 import { BaseContainer, V_CONTAINER_TYPE } from "./BaseContainer";
@@ -93,5 +98,22 @@ export class Group extends BaseContainer {
         member.setFields({ x: finalMemberX, y: finalMemberY }, false);
       });
     }
+  }
+
+  protected _isPointInObject(point: Point): boolean {
+    return isPointInPolygon(point, this.boundingBoxVertices);
+  }
+
+  protected _isPointInMember(point: Point): VerbalObject | null {
+    let run = this.members.getEnd();
+    while (!run.isNull()) {
+      const obj = run.value();
+      if (obj) {
+        const res = obj.judgePointInObject(point);
+        if (res) return res;
+      }
+      run.prev();
+    }
+    return null;
   }
 }

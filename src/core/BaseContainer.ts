@@ -1,3 +1,4 @@
+import { ShlType, SimpleHashList } from "../common/SimpleHashList";
 import { V_OBJECT_TYPE, VerbalObject } from "./VerbalObject";
 
 /**
@@ -15,6 +16,12 @@ export const V_CONTAINER_TYPE = {
  */
 export abstract class BaseContainer extends VerbalObject {
   protected containerType: string = ""; // 容器类型
+
+  constructor(fields: Record<string, any> = {}) {
+    super(fields);
+    this._initFields(fields);
+    this.vObjectType = V_OBJECT_TYPE.CONTAINER;
+  }
 
   /**
    * 放置元素
@@ -49,12 +56,6 @@ export abstract class BaseContainer extends VerbalObject {
    * @param obj
    */
   abstract contains(obj: VerbalObject): boolean;
-
-  constructor(fields: Record<string, any> = {}) {
-    super(fields);
-    this._initFields(fields);
-    this.vObjectType = V_OBJECT_TYPE.CONTAINER;
-  }
 
   /**
    * 获取容器类型

@@ -37,7 +37,7 @@ export class Picture extends BaseWidget {
     if (newValue.hasOwn("src")) this.imageCache = null;
   }
 
-  public isPointInObject(point: Point): boolean {
+  protected _isPointInObject(point: Point): boolean {
     return isPointInPolygon(point, this.boundingBoxVertices);
   }
 }

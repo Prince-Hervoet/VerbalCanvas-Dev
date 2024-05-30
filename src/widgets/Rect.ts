@@ -11,7 +11,7 @@ export class Rect extends BaseWidget {
     this.widgetType = V_WIDGET_TYPE.RECT;
   }
 
-  public isPointInObject(point: Point): boolean {
+  protected _isPointInObject(point: Point): boolean {
     return isPointInPolygon(point, this.boundingBoxVertices);
   }
 }
