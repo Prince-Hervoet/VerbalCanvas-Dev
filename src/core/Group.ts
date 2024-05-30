@@ -8,11 +8,15 @@ import { BaseContainer, V_CONTAINER_TYPE } from "./BaseContainer";
 import { VerbalObject } from "./VerbalObject";
 import { Painter } from "./Painter";
 import { isNullOrUndefined } from "../common/Utils";
+import { SimpleHashList } from "../common/SimpleHashList";
+
+type ObjectListType = SimpleHashList<string, VerbalObject>;
 
 /**
  * 组类
  */
 export class Group extends BaseContainer {
+  protected objects: ObjectListType = new SimpleHashList();
   protected members: Set<VerbalObject> = new Set(); // 存放成员的数据结构
   protected tempCenterPoint: Point = { x: 0, y: 0 };
 
