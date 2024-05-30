@@ -240,7 +240,7 @@ export class SimpleHashList<K, V> implements ContainerList<K, V> {
    * 获取数量
    * @returns
    */
-  public getSize() {
+  public size() {
     return this.keyToNode.size;
   }
 
@@ -267,7 +267,7 @@ export class SimpleHashList<K, V> implements ContainerList<K, V> {
    * @returns
    */
   public getEntryArray() {
-    if (this.getSize() === 0) return [];
+    if (this.size() === 0) return [];
     let run = this.head;
     const ans = [];
     while (run) {

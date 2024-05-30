@@ -433,11 +433,15 @@ export abstract class VerbalObject implements EventHandler {
     return false;
   }
 
+  isPointInMember(point: Point): VerbalObject | null {
+    return null;
+  }
+
   getCenterPoint() {
     return this.centerPoint;
   }
 
-  public getBoundingBoxVertices() {
+  getBoundingBoxVertices() {
     return this.boundingBoxVertices;
   }
 

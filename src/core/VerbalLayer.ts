@@ -116,7 +116,7 @@ export class VerbalLayer extends BaseContainer {
    * @returns
    */
   isPointInOneObject(point: Point): VerbalObject | null {
-    if (this.objectList.getSize() === 0) return null;
+    if (this.objectList.size() === 0) return null;
     let flag = this.objectList.getTail();
     while (flag) {
       const widget = flag.getValue();
@@ -148,7 +148,7 @@ export class VerbalLayer extends BaseContainer {
    * @returns
    */
   size(): number {
-    return this.objectList.getSize();
+    return this.objectList.size();
   }
 
   /**

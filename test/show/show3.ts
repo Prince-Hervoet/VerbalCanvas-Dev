@@ -1,5 +1,5 @@
 import { SimpleEventType } from "../../src/core/EventMapping";
-import { Group } from "../../src/core/Group";
+import { Combination } from "../../src/core/Combination";
 import {
   StaticVerbalCanvas,
   staticVerbalCanvas,
@@ -84,7 +84,7 @@ btnCanvasThreeDrawCircle?.addEventListener("click", () => {
     height: 200,
     style: { fillStyle: "blue" },
   });
-  const group = new Group();
+  const group = new Combination();
   group.place(circle, circle2);
   verbalCanvas.place(group);
 });

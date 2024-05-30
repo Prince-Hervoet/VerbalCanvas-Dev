@@ -8,7 +8,7 @@ import { Text } from "../src/widgets/Text";
 import { Transformer } from "../src/widgets/default/Transformer";
 import { Line } from "../src/widgets/Line";
 import { Animation } from "../src/widgets/default/Animation";
-import { Group } from "../src/core/Group";
+import { Combination } from "../src/core/Combination";
 
 const container = document.getElementById("main")!;
 const canvasDom = document.getElementById("canvas")! as HTMLCanvasElement;
@@ -101,7 +101,7 @@ const transformer = new Transformer({});
 //     })
 //   );
 // // }
-const group = new Group();
+const group = new Combination();
 group.place(rect, ellipse, rect2);
 // transformer.linkTo(group);
 // const line = new Line({

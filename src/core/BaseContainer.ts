@@ -5,6 +5,7 @@ import { V_OBJECT_TYPE, VerbalObject } from "./VerbalObject";
  */
 export const V_CONTAINER_TYPE = {
   GROUP: "group",
+  COMBINATION: "combination",
   MULTIPLE_SELECT_LIST: "multipleSelectList",
   VERBAL_LAYER: "verbalLayer",
 };
@@ -37,6 +38,11 @@ export abstract class BaseContainer extends VerbalObject {
    * 清空
    */
   abstract clear(): void;
+
+  /**
+   * 获取成员数量
+   */
+  abstract size(): number;
 
   /**
    * 是否包含某个元素
