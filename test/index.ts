@@ -1,8 +1,4 @@
-import { isObjectLiteralElementLike } from "typescript";
-import { generateRandomNumber } from "../src/common/MathUtils";
-import { generateRandomHexColor, parseSvgPath } from "../src/common/Utils";
 import { SimpleEventType } from "../src/core/EventMapping";
-import { Group } from "../src/core/Group";
 import {
   StaticVerbalCanvas,
   staticVerbalCanvas,
@@ -10,7 +6,9 @@ import {
 import { Picture } from "../src/widgets/Picture";
 import { Text } from "../src/widgets/Text";
 import { Transformer } from "../src/widgets/default/Transformer";
-import { MultipleSelectList } from "../src/core/MultipleSelectList";
+import { Line } from "../src/widgets/Line";
+import { Animation } from "../src/widgets/default/Animation";
+import { Combination } from "../src/core/Combination";
 
 const container = document.getElementById("main")!;
 const canvasDom = document.getElementById("canvas")! as HTMLCanvasElement;
@@ -23,7 +21,7 @@ const svc = staticVerbalCanvas(canvasDom, {
   },
 });
 const rect = StaticVerbalCanvas.Rect({
-  x: 100,
+  x: 200,
   y: 100,
   width: 200,
   height: 200,
@@ -102,11 +100,31 @@ const transformer = new Transformer({});
 //       },
 //     })
 //   );
-// }
-const group = new Group();
+// // }
+const group = new Combination();
 group.place(rect, ellipse, rect2);
-transformer.linkTo(group);
-svc.place(group, transformer);
+// transformer.linkTo(group);
+// const line = new Line({
+//   x1: 100,
+//   y1: 100,
+//   x2: 200,
+//   y2: 300,
+//   style: { strokeStyle: "green", lineWidth: 10 },
+// });
+
+const period = 2000;
+
+const animation = new Animation((timestamp: number, duration: number) => {
+  rect.update("x", 60 * Math.sin((timestamp * 2 * Math.PI) / period) + 100);
+});
+
+svc.place(rect);
+svc.startEvent();
+
+rect.eventOn("ve-mouseup", (event: SimpleEventType) => {
+  console.log(event);
+});
+// animation.startAnimation();
 // const testMultipleSelectList = new MultipleSelectList();
 // svc.place(testMultipleSelectList);
 // testMultipleSelectList.place(rect, rect2);
@@ -127,11 +145,11 @@ svc.eventOn("ve-mouseover", (event: SimpleEventType) => {
 //   rect.update("style", style);
 // });
 
-rect.eventOn("ve-mouseout", (event: SimpleEventType) => {
-  const style = rect.getStyle();
-  style.fillStyle = "#2E8B57";
-  rect.update("style", style);
-});
+// rect.eventOn("ve-mouseout", (event: SimpleEventType) => {
+//   const style = rect.getStyle();
+//   style.fillStyle = "#2E8B57";
+//   rect.update("style", style);
+// });
 
 setTimeout(() => {
   // testMultipleSelectList.update("rotate", 50);

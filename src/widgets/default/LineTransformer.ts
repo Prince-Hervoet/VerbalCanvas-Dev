@@ -71,7 +71,7 @@ export class LineTransformer extends BaseWidget {
     return -1;
   }
 
-  isPointInObject(point: Point): boolean {
+  _isPointInObject(point: Point): boolean {
     return this.pointOnControlPointIndex(point) !== -1;
   }
 

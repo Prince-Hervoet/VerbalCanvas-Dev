@@ -4,17 +4,13 @@ import {
   isPointInPolygon,
   rotatePoint,
 } from "../common/MathUtils";
+import { ShlType, SimpleHashList } from "../common/SimpleHashList";
+import { hasProperty } from "../common/Utils";
 import { BaseContainer, V_CONTAINER_TYPE } from "./BaseContainer";
 import { VerbalObject } from "./VerbalObject";
-import { Painter } from "./Painter";
-import { isNullOrUndefined } from "../common/Utils";
 
-/**
- * 组类
- */
 export class Group extends BaseContainer {
-  protected members: Set<VerbalObject> = new Set(); // 存放成员的数据结构
-  protected tempCenterPoint: Point = { x: 0, y: 0 };
+  private members: ShlType<string, VerbalObject> = new SimpleHashList();
 
   constructor() {
     super();
@@ -26,8 +22,9 @@ export class Group extends BaseContainer {
    */
   protected _updateGroupFields() {
     const bbs: Point[][] = [];
-    for (const member of this.members)
-      bbs.push(member.getBoundingBoxVertices());
+    this.members.traverseForward((key: string, value: VerbalObject) => {
+      bbs.push(value.getBoundingBoxVertices());
+    });
     const { minX, minY, maxX, maxY } = getGroupBoundingBox(bbs);
     this.x = minX;
     this.y = minY;
@@ -35,49 +32,7 @@ export class Group extends BaseContainer {
     this.height = maxY - minY;
     this.rotate = 0;
     this._updateCenterPoint();
-    this._updateTempCenterPoint();
     this._updateBoundingBoxVertices();
-  }
-
-  /**
-   * 将成员的坐标设置为相对于组
-   */
-  protected _updateMembersCoord() {
-    for (const member of this.members) {
-      member.silentlyUpdate("x", member.getAttr("x") - this.x);
-      member.silentlyUpdate("y", member.getAttr("y") - this.y);
-    }
-  }
-
-  protected _updateTempCenterPoint() {
-    this.tempCenterPoint.x = this.centerPoint.x - this.x;
-    this.tempCenterPoint.y = this.centerPoint.y - this.y;
-  }
-
-  /**
-   * 重新计算成员的属性
-   * @param obj
-   */
-  protected _recoverMemberCoord(obj: VerbalObject) {
-    const finalScaleX = obj.getAttr("scaleX") * this.scaleX;
-    const finalScaleY = obj.getAttr("scaleY") * this.scaleY;
-    const finalRotate = obj.getAttr("rotate") + this.rotate;
-    obj.setFields(
-      { scaleX: finalScaleX, scaleY: finalScaleY, rotate: finalRotate },
-      false
-    );
-    const finalCenterPoint = rotatePoint(
-      obj.getCenterPoint(),
-      {
-        x: this.centerPoint.x - this.x,
-        y: this.centerPoint.y - this.y,
-      },
-      this.rotate,
-      false
-    );
-    const finalMemberX = this.x + finalCenterPoint.x - obj.getFinalWidth() / 2;
-    const finalMemberY = this.y + finalCenterPoint.y - obj.getFinalHeight() / 2;
-    obj.setFields({ x: finalMemberX, y: finalMemberY }, false);
   }
 
   place(...objs: VerbalObject[]): void {
@@ -85,86 +40,80 @@ export class Group extends BaseContainer {
   }
 
   placeArray(objs: VerbalObject[]): void {
-    const coincident = [];
-    for (const obj of objs) {
-      if (
-        isNullOrUndefined(obj) ||
-        this.contains(obj) ||
-        obj === this ||
-        obj.getAttr("containerType") === V_CONTAINER_TYPE.MULTIPLE_SELECT_LIST
-      )
-        continue;
-      coincident.push(obj);
-    }
-    if (coincident.length === 0) return;
-    for (const member of this.members) this._recoverMemberCoord(member);
-    for (const obj of coincident) {
-      obj.transfer(this);
-      this.members.add(obj);
-    }
+    for (const obj of objs) this.members.insertLast(obj.getObjectId(), obj);
     this._updateGroupFields();
-    this._updateMembersCoord();
-    this.requestUpdate();
   }
 
-  /**
-   * 删除成员
-   * @param objs
-   * @returns
-   */
   remove(...objs: VerbalObject[]): void {
-    let hasUpdate = false;
-    for (const obj of objs) {
-      if (!obj) continue;
-      if (!this.contains(obj)) continue;
-      this._recoverMemberCoord(obj);
-      this.members.delete(obj);
-      obj.transfer(null);
-      hasUpdate = true;
-    }
-    if (!hasUpdate) return;
-    for (const member of this.members) this._recoverMemberCoord(member);
+    for (const obj of objs) this.members.remove(obj.getObjectId());
     this._updateGroupFields();
-    this._updateMembersCoord();
-    this.requestUpdate();
   }
 
   clear(): void {
-    for (const member of this.members) this._recoverMemberCoord(member);
     this.members.clear();
-    this.x = 0;
-    this.y = 0;
-    this.width = 0;
-    this.height = 0;
-    this.rotate = 0;
-    this.requestUpdate();
   }
 
   contains(obj: VerbalObject): boolean {
-    return this.members.has(obj);
+    return this.members.contains(obj.getObjectId());
   }
 
-  getMembers(): VerbalObject[] {
-    const ans = [];
-    for (const member of this.members) ans.push(member);
-    return ans;
+  size(): number {
+    return this.members.size();
   }
 
   protected _update(
     newValue: Record<string, any>,
     oldValue: Record<string, any>
   ): void {
-    this._updateTempCenterPoint();
+    this.updateMemberFields(newValue, oldValue);
   }
 
-  protected _render(painter: Painter): void {
-    for (const member of this.members) {
-      if (painter.draw(member)) continue;
-      member.render(painter);
+  private updateMemberFields(
+    newValue: Record<string, any>,
+    oldValue: Record<string, any>
+  ) {
+    if (hasProperty(newValue, "x")) {
+      const offsetX = newValue.x - oldValue.x;
+      this.members.traverseForward((key: string, value: VerbalObject) => {
+        value.silentlyUpdate("x", value.getAttr("x") + offsetX);
+      });
+    }
+    if (hasProperty(newValue, "y")) {
+      const offsetY = newValue.y - oldValue.y;
+      this.members.traverseForward((key: string, value: VerbalObject) => {
+        value.silentlyUpdate("y", value.getAttr("y") + offsetY);
+      });
+    }
+    if (hasProperty(newValue, "rotate")) {
+      this.members.traverseForward((key: string, member: VerbalObject) => {
+        member.silentlyUpdate("rotate", member.getRotate() + this.rotate);
+        const finalCenterPoint = rotatePoint(
+          member.getCenterPoint(),
+          this.centerPoint,
+          this.rotate,
+          false
+        );
+        const finalMemberX = finalCenterPoint.x - member.getFinalWidth() / 2;
+        const finalMemberY = finalCenterPoint.y - member.getFinalHeight() / 2;
+        member.setFields({ x: finalMemberX, y: finalMemberY }, false);
+      });
     }
   }
 
-  public isPointInObject(point: Point): boolean {
+  protected _isPointInObject(point: Point): boolean {
     return isPointInPolygon(point, this.boundingBoxVertices);
+  }
+
+  protected _isPointInMember(point: Point): VerbalObject | null {
+    let run = this.members.getEnd();
+    while (!run.isNull()) {
+      const obj = run.value();
+      if (obj) {
+        const res = obj.judgePointInObject(point);
+        if (res) return res;
+      }
+      run.prev();
+    }
+    return null;
   }
 }

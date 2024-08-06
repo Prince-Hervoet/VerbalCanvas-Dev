@@ -1,5 +1,5 @@
 import { SimpleEventType } from "../../src/core/EventMapping";
-import { Group } from "../../src/core/Group";
+import { Combination } from "../../src/core/Combination";
 import {
   StaticVerbalCanvas,
   staticVerbalCanvas,
@@ -19,7 +19,6 @@ let index = -1;
 const transformer = new Transformer();
 verbalCanvas.eventOn("ve-mousedown", (event: SimpleEventType) => {
   console.log(event);
-
   const target = event.target;
   if (
     target &&
@@ -45,7 +44,7 @@ verbalCanvas.eventOn("ve-mousemove", (event: SimpleEventType) => {
   if (index !== -1) {
     // debugger;
     const { offsetX, offsetY } = event.hostMouseEvent!;
-    transformer.transformTarget({ x: offsetX, y: offsetY }, index, true);
+    transformer.transformTarget({ x: offsetX, y: offsetY }, index, false);
   }
 });
 
@@ -85,7 +84,7 @@ btnCanvasThreeDrawCircle?.addEventListener("click", () => {
     height: 200,
     style: { fillStyle: "blue" },
   });
-  const group = new Group();
+  const group = new Combination();
   group.place(circle, circle2);
   verbalCanvas.place(group);
 });

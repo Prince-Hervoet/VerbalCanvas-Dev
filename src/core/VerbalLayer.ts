@@ -1,5 +1,5 @@
 import { Point } from "../common/MathUtils";
-import { SimpleHashList } from "../common/SimpleHashList";
+import { ShlType, SimpleHashList } from "../common/SimpleHashList";
 import { BaseContainer, V_CONTAINER_TYPE } from "./BaseContainer";
 import { Canvas } from "./Canvas";
 import { INNER_EVENT_TYPE } from "./EventMapping";
@@ -9,8 +9,7 @@ import { BasePainter, Painter } from "./Painter";
 export class VerbalLayer extends BaseContainer {
   private canvas: Canvas;
   private painter: Painter;
-  private objectList: SimpleHashList<string, VerbalObject> =
-    new SimpleHashList();
+  private objectList: ShlType<string, VerbalObject> = new SimpleHashList();
   private isRenderFlag: boolean = true;
 
   constructor(canvas: Canvas, painter?: Painter) {
@@ -116,13 +115,16 @@ export class VerbalLayer extends BaseContainer {
    * @param y
    * @returns
    */
-  isPointInOneObject(point: Point): VerbalObject | null {
-    if (this.objectList.getSize() === 0) return null;
+  judgePointInOneObject(point: Point): VerbalObject | null {
+    if (this.objectList.size() === 0) return null;
     let flag = this.objectList.getTail();
+    let res: VerbalObject | null = null;
     while (flag) {
-      const widget = flag.getValue();
-      if (widget.getIsPointEvent())
-        if (widget.isPointInObject(point)) return widget;
+      const obj = flag.getValue();
+      if (obj.getIsPointEvent()) {
+        res = obj.judgePointInObject(point);
+        if (res) return res;
+      }
       flag = flag.prev;
     }
     return null;
@@ -149,7 +151,7 @@ export class VerbalLayer extends BaseContainer {
    * @returns
    */
   size(): number {
-    return this.objectList.getSize();
+    return this.objectList.size();
   }
 
   /**

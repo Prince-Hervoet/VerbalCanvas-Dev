@@ -365,10 +365,20 @@ export abstract class VerbalObject implements EventHandler {
     }
   }
 
+  /**
+   * 通用方便获取属性的方法
+   * @param key
+   * @returns
+   */
   getAttr(key: string): any {
     return (this as any)[key];
   }
 
+  /**
+   * 通用方便设置属性的方法
+   * @param key
+   * @param value
+   */
   setAttr(key: string, value: any) {
     (this as any)[key] = value;
   }
@@ -429,15 +439,48 @@ export abstract class VerbalObject implements EventHandler {
     return this.isPointerEvent;
   }
 
-  isPointInObject(point: Point): boolean {
+  /**
+   * 判断点是否在元素中的方法
+   * @param point
+   * @returns
+   */
+  judgePointInObject(point: Point): VerbalObject | null {
+    if (this.vObjectType === V_OBJECT_TYPE.WIDGET) {
+      // 如果元素是一个widget类型，则直接判断是否在形状中
+      if (this._isPointInObject(point)) return this;
+      else return null;
+    } else if (this.vObjectType === V_OBJECT_TYPE.CONTAINER) {
+      // 如果元素是一个容器类型，则先判断是否在容器包围盒中
+      if (!this._isPointInObject(point)) return null;
+      // 如果确实在包围盒中，再判断在容器中哪一个
+      return this._isPointInMember(point);
+    }
+    return null;
+  }
+
+  /**
+   * 判断点是否在形状中
+   * @param point
+   * @returns
+   */
+  protected _isPointInObject(point: Point): boolean {
     return false;
+  }
+
+  /**
+   * 判断点是否在某个成员中
+   * @param point
+   * @returns
+   */
+  protected _isPointInMember(point: Point): VerbalObject | null {
+    return null;
   }
 
   getCenterPoint() {
     return this.centerPoint;
   }
 
-  public getBoundingBoxVertices() {
+  getBoundingBoxVertices() {
     return this.boundingBoxVertices;
   }
 

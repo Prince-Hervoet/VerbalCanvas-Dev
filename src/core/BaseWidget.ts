@@ -1,5 +1,4 @@
 import { Point } from "../common/MathUtils";
-import { deepClone } from "../common/Utils";
 import { V_OBJECT_TYPE, VerbalObject } from "./VerbalObject";
 
 /**

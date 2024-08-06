@@ -25,7 +25,7 @@ export class Ellipse extends BaseWidget {
       this.updateAxis();
   }
 
-  public isPointInObject(point: Point): boolean {
+  protected _isPointInObject(point: Point): boolean {
     return isPointInEllipse(
       point,
       this.axisX,

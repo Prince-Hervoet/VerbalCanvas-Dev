@@ -1,12 +1,12 @@
 import { rotatePoint } from "../common/MathUtils";
 import { hasProperty, isNullOrUndefined } from "../common/Utils";
 import { V_CONTAINER_TYPE } from "./BaseContainer";
-import { Group } from "./Group";
+import { Combination } from "./Combination";
 import { Painter } from "./Painter";
 import { VerbalObject } from "./VerbalObject";
 
 // TODO: 将多选逻辑设计完整
-export class MultipleSelectList extends Group {
+export class MultipleSelectList extends Combination {
   constructor() {
     super();
     this.containerType = V_CONTAINER_TYPE.MULTIPLE_SELECT_LIST;
