@@ -13,6 +13,10 @@ import { Combination } from "../src/core/Combination";
 const container = document.getElementById("main")!;
 const canvasDom = document.getElementById("canvas")! as HTMLCanvasElement;
 
+canvasDom.addEventListener("click", (event: MouseEvent) => {
+  console.log(event);
+});
+
 const svc = staticVerbalCanvas(canvasDom, {
   width: 1000,
   height: 1000,
