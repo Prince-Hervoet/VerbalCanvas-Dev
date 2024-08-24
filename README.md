@@ -1,5 +1,4 @@
 # VerbalCanvas-Dev
-![cherry-575547_1920](https://github.com/Prince-Hervoet/VerbalCanvas-Dev/assets/122962161/5ac14270-83ab-488d-b205-de6b22a5e8da)
 ![rects 2024-08-24 113848](https://github.com/user-attachments/assets/989306b1-575e-496f-86ca-b74d07a7ded8)
 
 
